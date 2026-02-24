@@ -45,7 +45,15 @@ function getSubjectGuidance(subject: Subject): string {
 - VÍ DỤ: Vẽ đồ thị hàm số bằng GeoGebra, tính toán bằng MTCT, lập bảng tính Excel
 - CHÚ Ý: Công thức toán học cần viết dạng LaTeX ($x^2$)`;
 
-    case Subject.VAN:
+    case Subject.TIENG_VIET:
+      return `
+📚 ĐẶC THÙ MÔN TIẾNG VIỆT (TIỂU HỌC) - HƯỚNG DẪN NLS:
+- ƯU TIÊN: Đọc hiểu nội dung số, sáng tạo bài viết đơn giản, giao tiếp an toàn
+- NLS PHÙ HỢP: 1.1 (Tìm kiếm thông tin đơn giản), 3.1 (Tạo nội dung cơ bản), 2.2 (Chia sẻ)
+- VÍ DỤ: Nghe đọc truyện qua ứng dụng, viết bài trên máy tính, tìm kiếm từ điển trực tuyến
+- CHÚ Ý: Phù hợp lứa tuổi tiểu học, thao tác đơn giản, có hướng dẫn`;
+
+    case Subject.NGU_VAN:
       return `
 📚 ĐẶC THÙ MÔN NGỮ VĂN - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Khai thác thông tin, sáng tạo nội dung, giao tiếp hợp tác
@@ -53,9 +61,41 @@ function getSubjectGuidance(subject: Subject): string {
 - VÍ DỤ: Tìm kiếm tài liệu văn học trực tuyến, viết bài trên Google Docs, thảo luận nhóm qua Padlet
 - CHÚ Ý: Đánh giá độ tin cậy nguồn tư liệu văn học, tránh thông tin sai lệch`;
 
-    case Subject.LY:
-    case Subject.HOA:
-    case Subject.SINH:
+    case Subject.DAO_DUC:
+      return `
+📚 ĐẶC THÙ MÔN ĐẠO ĐỨC (TIỂU HỌC) - HƯỚNG DẪN NLS:
+- ƯU TIÊN: Ứng xử văn minh trên mạng, bảo vệ bản thân trên không gian số
+- NLS PHÙ HỢP: 2.3 (Công dân số), 4.2 (Bảo vệ dữ liệu cá nhân), 2.5 (Văn hóa mạng)
+- VÍ DỤ: Nhận biết thông tin tốt/xấu, không chia sẻ thông tin cá nhân, xin phép khi chụp ảnh người khác
+- CHÚ Ý: Nội dung đơn giản, gần gũi đời sống, dùng ví dụ trực quan`;
+
+    case Subject.TN_XH:
+      return `
+📚 ĐẶC THÙ MÔN TỰ NHIÊN VÀ XÃ HỘI (LỚP 1-3) - HƯỚNG DẪN NLS:
+- ƯU TIÊN: Quan sát qua hình ảnh/video, tìm hiểu thiên nhiên qua công cụ số
+- NLS PHÙ HỢP: 1.1 (Tìm kiếm thông tin đơn giản), 3.1 (Tạo nội dung đơn giản)
+- VÍ DỤ: Xem video về động vật, thực vật, tìm hiểu hiện tượng tự nhiên qua ứng dụng
+- CHÚ Ý: Hoạt động trải nghiệm trực tiếp kết hợp công cụ số hỗ trợ`;
+
+    case Subject.KHOA_HOC:
+      return `
+📚 ĐẶC THÙ MÔN KHOA HỌC (LỚP 4-5) - HƯỚNG DẪN NLS:
+- ƯU TIÊN: Tìm kiếm thông tin khoa học, quan sát mô phỏng, thu thập dữ liệu đơn giản
+- NLS PHÙ HỢP: 1.1 (Tìm kiếm), 5.2 (Công cụ giải quyết vấn đề), 3.1 (Tạo nội dung)
+- VÍ DỤ: Sử dụng phần mềm mô phỏng (PhET đơn giản), vẽ biểu đồ, tra cứu bách khoa trực tuyến
+- CHÚ Ý: Phù hợp lứa tuổi, hướng dẫn rõ ràng từng bước`;
+
+    case Subject.KHTN:
+      return `
+📚 ĐẶC THÙ MÔN KHOA HỌC TỰ NHIÊN (THCS) - HƯỚNG DẪN NLS:
+- ƯU TIÊN: Mô phỏng thí nghiệm, thu thập và phân tích dữ liệu, tìm kiếm thông tin khoa học
+- NLS PHÙ HỢP: 5.2 (Công cụ giải quyết vấn đề), 1.1, 1.2 (Tìm kiếm, đánh giá dữ liệu), 3.1 (Tạo nội dung)
+- VÍ DỤ: Sử dụng PhET mô phỏng thí nghiệm Vật lí/Hóa học/Sinh học, vẽ biểu đồ Excel, tra cứu dữ liệu khoa học
+- CHÚ Ý: Tích hợp cả 3 phân môn (Vật lí, Hóa học, Sinh học), xác minh tính chính xác nguồn dữ liệu`;
+
+    case Subject.VAT_LI:
+    case Subject.HOA_HOC:
+    case Subject.SINH_HOC:
       return `
 📚 ĐẶC THÙ MÔN KHTN (${subject}) - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Mô phỏng thí nghiệm, thu thập dữ liệu, phân tích kết quả
@@ -63,7 +103,7 @@ function getSubjectGuidance(subject: Subject): string {
 - VÍ DỤ: Sử dụng phần mềm mô phỏng thí nghiệm (PhET), vẽ biểu đồ bằng Excel, tra cứu dữ liệu khoa học
 - CHÚ Ý: Xác minh tính chính xác của dữ liệu khoa học từ các nguồn đáng tin cậy`;
 
-    case Subject.ANH:
+    case Subject.TIENG_ANH:
       return `
 📚 ĐẶC THÙ MÔN TIẾNG ANH - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Công cụ học ngôn ngữ, giao tiếp trực tuyến, sáng tạo nội dung đa phương tiện
@@ -71,16 +111,26 @@ function getSubjectGuidance(subject: Subject): string {
 - VÍ DỤ: Sử dụng từ điển trực tuyến, luyện phát âm qua app, tạo video bài thuyết trình
 - CHÚ Ý: Khuyến khích sử dụng các nền tảng học tiếng Anh (Duolingo, Quizlet, Kahoot)`;
 
-    case Subject.SU:
-    case Subject.DIA:
+    case Subject.LS_DL_TH:
+    case Subject.LS_DL_THCS:
+      return `
+📚 ĐẶC THÙ MÔN LỊCH SỬ VÀ ĐỊA LÍ - HƯỚNG DẪN NLS:
+- ƯU TIÊN: Tìm kiếm tư liệu lịch sử/địa lí, đánh giá nguồn tin, trình bày đa phương tiện
+- NLS PHÙ HỢP: 1.1, 1.2 (Tìm kiếm, đánh giá nguồn), 2.2 (Chia sẻ), 3.1 (Sáng tạo nội dung)
+- VÍ DỤ: Tra cứu bản đồ trực tuyến (Google Maps/Earth), tìm hiểu tài liệu lịch sử số hóa, thuyết trình bằng PowerPoint
+- CHÚ Ý: Đánh giá độ tin cậy của các nguồn tư liệu lịch sử/địa lý`;
+
+    case Subject.LICH_SU:
+    case Subject.DIA_LI:
       return `
 📚 ĐẶC THÙ MÔN KHXH (${subject}) - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Tìm kiếm tư liệu, đánh giá nguồn tin, trình bày đa phương tiện
 - NLS PHÙ HỢP: 1.1, 1.2 (Tìm kiếm, đánh giá nguồn), 2.2 (Chia sẻ), 3.1 (Sáng tạo nội dung)
 - VÍ DỤ: Tra cứu bản đồ trực tuyến, tìm hiểu tài liệu lịch sử số hóa, thuyết trình bằng PowerPoint
-- CHÚ Ý: Đánh giá độ tin cậy của các nguồn tư liệu lịch sử/địa lý`;
+- CHÚ Ý: Đánh giá độ tin cậy của các nguồn tư liệu`;
 
-    case Subject.TIN:
+    case Subject.TIN_HOC:
+    case Subject.TIN_CN_TH:
       return `
 📚 ĐẶC THÙ MÔN TIN HỌC - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Lập trình, an toàn thông tin, giải quyết lỗi kỹ thuật
@@ -90,61 +140,63 @@ function getSubjectGuidance(subject: Subject): string {
 
     case Subject.GDCD:
       return `
-📚 ĐẶC THÙ MÔN GDCD - HƯỚNG DẪN NLS:
+📚 ĐẶC THÙ MÔN GIÁO DỤC CÔNG DÂN (THCS) - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Tham gia công dân số, văn hóa mạng, bảo vệ quyền riêng tư
 - NLS PHÙ HỢP: 2.3 (Công dân số), 2.5 (Văn hóa mạng), 4.2 (Bảo vệ dữ liệu), 1.2 (Đánh giá tin giả)
 - VÍ DỤ: Nhận diện thông tin sai lệch, ứng xử văn minh trên mạng, bảo vệ thông tin cá nhân
 - CHÚ Ý: Giáo dục ý thức công dân số có trách nhiệm`;
 
-    case Subject.GDQPAN:
+    case Subject.GD_KTPL:
+      return `
+📚 ĐẶC THÙ MÔN GIÁO DỤC KINH TẾ VÀ PHÁP LUẬT (THPT) - HƯỚNG DẪN NLS:
+- ƯU TIÊN: Kinh tế số, thương mại điện tử, pháp luật về công nghệ thông tin
+- NLS PHÙ HỢP: 2.3 (Công dân số), 4.2 (Bảo vệ dữ liệu), 1.2 (Đánh giá thông tin), 3.3 (Bản quyền số)
+- VÍ DỤ: Tìm hiểu quy định pháp luật về TMĐT, bảo vệ quyền lợi người tiêu dùng online, luật an ninh mạng
+- CHÚ Ý: Kết hợp kiến thức pháp luật với thực tiễn hoạt động trên không gian số`;
+
+    case Subject.GDQP_AN:
       return `
 📚 ĐẶC THÙ MÔN GDQP-AN - HƯỚNG DẪN NLS:
 - ƯU TIÊN: An ninh mạng, bảo vệ thông tin quốc phòng, nhận diện thông tin xấu độc
 - NLS PHÙ HỢP: 4.1, 4.2 (Bảo vệ thiết bị, dữ liệu), 2.3 (Trách nhiệm công dân), 1.2 (Đánh giá thông tin)
-- VÍ DỤ: Nhận diện và phòng chống thông tin xấu độc trên mạng, bảo mật thông tin cá nhân và quốc phòng
-- CHÚ Ý ĐẶC BIỆT: 
-  + Tích hợp giáo dục an ninh mạng, phòng chống tội phạm công nghệ cao
-  + Nhận biết các thủ đoạn lừa đảo, tuyên truyền xuyên tạc trên không gian mạng
-  + Bảo vệ bí mật quốc gia, thông tin nhạy cảm về quốc phòng an ninh
-  + Ý thức trách nhiệm bảo vệ chủ quyền số quốc gia`;
+- VÍ DỤ: Nhận diện thông tin xấu độc trên mạng, bảo mật thông tin cá nhân và quốc phòng
+- CHÚ Ý: Tích hợp giáo dục an ninh mạng, bảo vệ chủ quyền số quốc gia`;
 
-    case Subject.GDDP:
+    case Subject.GD_DIA_PHUONG:
       return `
 📚 ĐẶC THÙ MÔN GIÁO DỤC ĐỊA PHƯƠNG - HƯỚNG DẪN NLS:
-- ƯU TIÊN: Khai thác thông tin địa phương, sáng tạo nội dung quảng bá văn hóa, hợp tác cộng đồng
+- ƯU TIÊN: Khai thác thông tin địa phương, sáng tạo nội dung quảng bá văn hóa
 - NLS PHÙ HỢP: 1.1 (Tìm kiếm thông tin), 2.2, 2.4 (Chia sẻ, hợp tác), 3.1 (Sáng tạo nội dung)
-- VÍ DỤ: Tìm hiểu di sản văn hóa địa phương qua các nguồn số, tạo video giới thiệu quê hương
-- CHÚ Ý ĐẶC BIỆT:
-  + Sử dụng công nghệ số để tìm hiểu, lưu giữ và quảng bá văn hóa địa phương
-  + Tạo bản đồ số về các địa điểm du lịch, di tích lịch sử địa phương
-  + Sưu tầm và số hóa các tài liệu về lịch sử, văn hóa, con người địa phương
-  + Kết nối cộng đồng qua các nền tảng số để bảo tồn và phát triển giá trị địa phương`;
+- VÍ DỤ: Tìm hiểu di sản văn hóa địa phương qua số, tạo video giới thiệu quê hương
+- CHÚ Ý: Sử dụng công nghệ số để lưu giữ và quảng bá văn hóa địa phương`;
 
     case Subject.CONG_NGHE:
       return `
 📚 ĐẶC THÙ MÔN CÔNG NGHỆ - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Thiết kế kỹ thuật số, mô phỏng quy trình, giải quyết vấn đề công nghệ
 - NLS PHÙ HỢP: 5.2 (Xác định giải pháp công nghệ), 3.1 (Sáng tạo nội dung), 5.3 (Sử dụng sáng tạo)
-- VÍ DỤ: Vẽ thiết kế bằng phần mềm CAD, mô phỏng quy trình sản xuất, tìm hiểu công nghệ mới
+- VÍ DỤ: Vẽ thiết kế bằng phần mềm CAD, mô phỏng quy trình sản xuất
 - CHÚ Ý: Kết hợp thực hành với công cụ số để nâng cao hiệu quả`;
 
-    case Subject.THE_DUC:
+    case Subject.GDTC:
       return `
-📚 ĐẶC THÙ MÔN THỂ DỤC - HƯỚNG DẪN NLS:
+📚 ĐẶC THÙ MÔN GIÁO DỤC THỂ CHẤT - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Theo dõi sức khỏe, học kỹ thuật qua video, bảo vệ sức khỏe số
 - NLS PHÙ HỢP: 4.3 (Bảo vệ sức khỏe), 1.1 (Tìm kiếm thông tin), 2.2 (Chia sẻ)
-- VÍ DỤ: Xem video hướng dẫn kỹ thuật, sử dụng app theo dõi sức khỏe, chia sẻ thành tích
+- VÍ DỤ: Xem video hướng dẫn kỹ thuật, sử dụng app theo dõi sức khỏe
 - CHÚ Ý: Cân bằng thời gian sử dụng thiết bị số và hoạt động thể chất`;
 
-    case Subject.NQTN:
+    case Subject.AM_NHAC:
+    case Subject.MY_THUAT:
+    case Subject.NGHE_THUAT:
       return `
-📚 ĐẶC THÙ MÔN NGHỆ THUẬT - HƯỚNG DẪN NLS:
+📚 ĐẶC THÙ MÔN NGHỆ THUẬT (${subject}) - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Sáng tạo nghệ thuật số, chia sẻ tác phẩm, bản quyền sáng tạo
 - NLS PHÙ HỢP: 3.1 (Sáng tạo nội dung), 3.3 (Bản quyền), 2.2 (Chia sẻ)
 - VÍ DỤ: Vẽ tranh số, chỉnh sửa ảnh/video, tạo nhạc số, triển lãm trực tuyến
 - CHÚ Ý: Giáo dục về bản quyền tác phẩm nghệ thuật`;
 
-    case Subject.HDKH:
+    case Subject.HDTN:
       return `
 📚 ĐẶC THÙ MÔN HOẠT ĐỘNG TRẢI NGHIỆM - HƯỚNG DẪN NLS:
 - ƯU TIÊN: Hợp tác nhóm trực tuyến, quản lý dự án, giao tiếp số
@@ -223,7 +275,7 @@ export const generateNLSLessonPlan = async (
   }
 
   // Determine if the subject is English to use English instructions
-  const isEnglishSubject = info.subject === Subject.ANH;
+  const isEnglishSubject = info.subject === Subject.TIENG_ANH;
 
   // Select appropriate framework and instructions based on subject
   const frameworkData = isEnglishSubject ? NLS_FRAMEWORK_DATA_ENGLISH : NLS_FRAMEWORK_DATA;
@@ -417,7 +469,15 @@ function getAISubjectGuidance(subject: Subject): string {
 - VÍ DỤ: Dùng AI phân tích dữ liệu thống kê, ChatGPT giải thích bài toán, AI vẽ đồ thị hàm số
 - CHÚ Ý: Kết hợp AI với MTCT, GeoGebra; so sánh kết quả AI và tính toán truyền thống`;
 
-    case Subject.VAN:
+    case Subject.TIENG_VIET:
+      return `
+📚 ĐẶC THÙ MÔN TIẾNG VIỆT (TIỂU HỌC) - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI đọc truyện, nhận diện chữ viết, hỗ trợ học phát âm
+- MIỀN AI PHÙ HỢP: Tư duy con người là trung tâm (nhận biết AI), Kỹ thuật AI (NLP đơn giản)
+- VÍ DỤ: AI đọc truyện (Text-to-Speech), nhận diện chữ viết tay, AI gợi ý từ vựng
+- CHÚ Ý: Phù hợp lứa tuổi, thao tác đơn giản, trải nghiệm AI là chính`;
+
+    case Subject.NGU_VAN:
       return `
 📚 ĐẶC THÙ MÔN NGỮ VĂN - HƯỚNG DẪN TÍCH HỢP AI:
 - ƯU TIÊN: AI xử lý ngôn ngữ tự nhiên, sáng tạo viết, phân tích văn bản
@@ -425,9 +485,41 @@ function getAISubjectGuidance(subject: Subject): string {
 - VÍ DỤ: Dùng AI hỗ trợ viết bài văn sáng tạo, phân tích phong cách tác giả, so sánh bản dịch AI
 - CHÚ Ý: Thảo luận về bản quyền nội dung AI tạo ra, nhận biết văn bản do AI viết`;
 
-    case Subject.LY:
-    case Subject.HOA:
-    case Subject.SINH:
+    case Subject.DAO_DUC:
+      return `
+📚 ĐẶC THÙ MÔN ĐẠO ĐỨC (TIỂU HỌC) - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: Nhận biết AI trong đời sống, ứng xử an toàn với công nghệ AI
+- MIỀN AI PHÙ HỢP: Đạo đức AI (nhận biết cơ bản), Tư duy con người là trung tâm
+- VÍ DỤ: Thảo luận AI tốt/xấu, hỏi trợ lý ảo có phải người thật không, bảo vệ thông tin cá nhân
+- CHÚ Ý: Nội dung cực đơn giản, ví dụ trực quan, phù hợp tiểu học`;
+
+    case Subject.TN_XH:
+      return `
+📚 ĐẶC THÙ MÔN TỰ NHIÊN VÀ XÃ HỘI (LỚP 1-3) - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI nhận diện hình ảnh động/thực vật, trò chơi AI đơn giản
+- MIỀN AI PHÙ HỢP: Tư duy con người là trung tâm, Kỹ thuật AI (nhận diện hình ảnh)
+- VÍ DỤ: Dùng AI nhận diện loài cây/con vật từ ảnh chụp, trò chơi phân loại với AI
+- CHÚ Ý: Trải nghiệm trực tiếp, hoạt động vui nhộn, không yêu cầu lý thuyết`;
+
+    case Subject.KHOA_HOC:
+      return `
+📚 ĐẶC THÙ MÔN KHOA HỌC (LỚP 4-5) - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI hỗ trợ khám phá khoa học, nhận diện hình ảnh, phân loại dữ liệu đơn giản
+- MIỀN AI PHÙ HỢP: Kỹ thuật AI (dữ liệu, nhận diện), Tư duy con người là trung tâm
+- VÍ DỤ: AI nhận diện mẫu sinh vật, phần mềm mô phỏng khoa học đơn giản, chatbot hỏi đáp khoa học
+- CHÚ Ý: Phù hợp lứa tuổi, kết hợp thực hành thí nghiệm với công cụ AI`;
+
+    case Subject.KHTN:
+      return `
+📚 ĐẶC THÙ MÔN KHOA HỌC TỰ NHIÊN (THCS) - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI mô phỏng thí nghiệm, phân tích dữ liệu, dự đoán kết quả, nhận diện mẫu vật
+- MIỀN AI PHÙ HỢP: Kỹ thuật AI (phân tích dữ liệu, Computer Vision), Tư duy con người là trung tâm
+- VÍ DỤ: AI dự đoán kết quả thí nghiệm, phân tích ảnh hiển vi, Teachable Machine phân loại mẫu vật
+- CHÚ Ý: Tích hợp cả 3 phân môn (Vật lí, Hóa học, Sinh học), so sánh kết quả AI và thực nghiệm`;
+
+    case Subject.VAT_LI:
+    case Subject.HOA_HOC:
+    case Subject.SINH_HOC:
       return `
 📚 ĐẶC THÙ MÔN KHTN (${subject}) - HƯỚNG DẪN TÍCH HỢP AI:
 - ƯU TIÊN: AI mô phỏng thí nghiệm, phân tích dữ liệu khoa học, dự đoán kết quả
@@ -435,7 +527,7 @@ function getAISubjectGuidance(subject: Subject): string {
 - VÍ DỤ: AI dự đoán kết quả thí nghiệm, phân tích ảnh hiển vi, nhận diện loài sinh vật
 - CHÚ Ý: So sánh dự đoán AI với kết quả thực nghiệm, đánh giá độ tin cậy AI`;
 
-    case Subject.ANH:
+    case Subject.TIENG_ANH:
       return `
 📚 ĐẶC THÙ MÔN TIẾNG ANH - HƯỚNG DẪN TÍCH HỢP AI:
 - ƯU TIÊN: AI dịch thuật, luyện phát âm, tạo bài tập ngữ pháp, chatbot hội thoại
@@ -443,8 +535,17 @@ function getAISubjectGuidance(subject: Subject): string {
 - VÍ DỤ: Dùng AI chatbot luyện hội thoại, AI chấm bài viết, AI phân tích ngữ pháp
 - CHÚ Ý: Đánh giá chất lượng dịch AI, không phụ thuộc hoàn toàn vào AI`;
 
-    case Subject.SU:
-    case Subject.DIA:
+    case Subject.LS_DL_TH:
+    case Subject.LS_DL_THCS:
+      return `
+📚 ĐẶC THÙ MÔN LỊCH SỬ VÀ ĐỊA LÍ - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI phân tích tư liệu, nhận diện bản đồ, tổng hợp sự kiện
+- MIỀN AI PHÙ HỢP: Tư duy con người là trung tâm, Đạo đức AI
+- VÍ DỤ: AI phân tích bản đồ vệ tinh, tổng hợp tài liệu lịch sử, chatbot thảo luận sự kiện
+- CHÚ Ý: Đánh giá độ thiên vị của AI khi phân tích sự kiện lịch sử`;
+
+    case Subject.LICH_SU:
+    case Subject.DIA_LI:
       return `
 📚 ĐẶC THÙ MÔN KHXH (${subject}) - HƯỚNG DẪN TÍCH HỢP AI:
 - ƯU TIÊN: AI phân tích tài liệu lịch sử, dự đoán xu hướng, nhận diện hình ảnh
@@ -452,7 +553,8 @@ function getAISubjectGuidance(subject: Subject): string {
 - VÍ DỤ: AI phân tích bản đồ vệ tinh, tổng hợp tài liệu lịch sử, chatbot thảo luận sự kiện
 - CHÚ Ý: Đánh giá độ thiên vị của AI khi phân tích sự kiện lịch sử`;
 
-    case Subject.TIN:
+    case Subject.TIN_HOC:
+    case Subject.TIN_CN_TH:
       return `
 📚 ĐẶC THÙ MÔN TIN HỌC - HƯỚNG DẪN TÍCH HỢP AI:
 - ƯU TIÊN: Lập trình AI, huấn luyện mô hình, thiết kế hệ thống AI
@@ -462,11 +564,19 @@ function getAISubjectGuidance(subject: Subject): string {
 
     case Subject.GDCD:
       return `
-📚 ĐẶC THÙ MÔN GDCD - HƯỚNG DẪN TÍCH HỢP AI:
+📚 ĐẶC THÙ MÔN GIÁO DỤC CÔNG DÂN (THCS) - HƯỚNG DẪN TÍCH HỢP AI:
 - ƯU TIÊN: Đạo đức AI, trách nhiệm công dân số, quyền riêng tư
 - MIỀN AI PHÙ HỢP: Đạo đức AI (trọng tâm), Tư duy con người là trung tâm
 - VÍ DỤ: Phân tích tình huống đạo đức AI, thảo luận thiên vị thuật toán, bảo vệ dữ liệu cá nhân
 - CHÚ Ý: Giáo dục ý thức sử dụng AI có trách nhiệm, không lạm dụng AI`;
+
+    case Subject.GD_KTPL:
+      return `
+📚 ĐẶC THÙ MÔN GIÁO DỤC KINH TẾ VÀ PHÁP LUẬT (THPT) - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI trong kinh tế số, pháp luật về AI, quyền sở hữu trí tuệ AI
+- MIỀN AI PHÙ HỢP: Đạo đức AI, Tư duy con người là trung tâm
+- VÍ DỤ: Phân tích tác động AI lên thị trường lao động, pháp luật về dữ liệu cá nhân, bản quyền sản phẩm AI
+- CHÚ Ý: Kết hợp kiến thức kinh tế-pháp luật với thực tiễn phát triển AI`;
 
     case Subject.CONG_NGHE:
       return `
@@ -475,6 +585,48 @@ function getAISubjectGuidance(subject: Subject): string {
 - MIỀN AI PHÙ HỢP: Kỹ thuật AI, Thiết kế hệ thống AI
 - VÍ DỤ: AI điều khiển robot, hệ thống nhà thông minh, AI tối ưu quy trình
 - CHÚ Ý: Kết hợp AI với công cụ thiết kế kỹ thuật số`;
+
+    case Subject.GDQP_AN:
+      return `
+📚 ĐẶC THÙ MÔN GDQP-AN - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI trong an ninh mạng, nhận diện deepfake, bảo vệ thông tin quốc phòng
+- MIỀN AI PHÙ HỢP: Đạo đức AI, Kỹ thuật AI (an ninh mạng)
+- VÍ DỤ: AI nhận diện video/ảnh giả, phòng chống tấn công mạng bằng AI, AI phân tích thông tin
+- CHÚ Ý: Bảo vệ chủ quyền số quốc gia, nhận diện thông tin xuyên tạc qua AI`;
+
+    case Subject.GDTC:
+      return `
+📚 ĐẶC THÙ MÔN GIÁO DỤC THỂ CHẤT - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI theo dõi sức khỏe, phân tích động tác thể thao, lập kế hoạch tập luyện
+- MIỀN AI PHÙ HỢP: Kỹ thuật AI (Computer Vision, dữ liệu sức khỏe)
+- VÍ DỤ: AI phân tích tư thế tập luyện, app AI theo dõi sức khỏe, AI lập kế hoạch dinh dưỡng
+- CHÚ Ý: Cân bằng sử dụng công nghệ và hoạt động thể chất`;
+
+    case Subject.AM_NHAC:
+    case Subject.MY_THUAT:
+    case Subject.NGHE_THUAT:
+      return `
+📚 ĐẶC THÙ MÔN NGHỆ THUẬT (${subject}) - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI sáng tạo nghệ thuật, tạo nhạc/hình ảnh, đạo đức sáng tạo AI
+- MIỀN AI PHÙ HỢP: Kỹ thuật AI (Generative AI), Đạo đức AI (bản quyền)
+- VÍ DỤ: AI tạo hình ảnh (DALL-E, Midjourney), AI sáng tác nhạc, AI hỗ trợ thiết kế
+- CHÚ Ý: Thảo luận bản quyền nghệ thuật AI, vai trò con người trong sáng tạo`;
+
+    case Subject.HDTN:
+      return `
+📚 ĐẶC THÙ MÔN HOẠT ĐỘNG TRẢI NGHIỆM - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: Dự án AI thực tế, trải nghiệm ứng dụng AI, hợp tác nhóm với AI
+- MIỀN AI PHÙ HỢP: Thiết kế hệ thống AI, Tư duy con người là trung tâm
+- VÍ DỤ: Dự án nhóm phát triển sản phẩm AI đơn giản, cuộc thi ý tưởng AI, trải nghiệm nghề AI
+- CHÚ Ý: Kết hợp trải nghiệm thực tế với công nghệ AI`;
+
+    case Subject.GD_DIA_PHUONG:
+      return `
+📚 ĐẶC THÙ MÔN GIÁO DỤC ĐỊA PHƯƠNG - HƯỚNG DẪN TÍCH HỢP AI:
+- ƯU TIÊN: AI phân tích dữ liệu địa phương, nhận diện di sản, chatbot giới thiệu văn hóa
+- MIỀN AI PHÙ HỢP: Kỹ thuật AI, Tư duy con người là trung tâm
+- VÍ DỤ: AI nhận diện di tích lịch sử từ ảnh, chatbot giới thiệu văn hóa địa phương
+- CHÚ Ý: Kết hợp AI với bảo tồn và phát triển giá trị địa phương`;
 
     default:
       return `
