@@ -26,8 +26,8 @@ const Header: React.FC<HeaderProps> = ({ onOpenSettings, appMode, onModeChange }
               </h1>
               <p className={`${isAIMode ? 'text-purple-100' : 'text-blue-100'} text-sm`}>
                 {isAIMode
-                  ? 'Tích hợp Giáo dục AI theo QĐ 3439/QĐ-BGDĐT'
-                  : 'Hỗ trợ tích hợp Năng lực số toàn cấp bởi Trần Hoài Thanh'
+                  ? 'Hỗ trợ tích hợp giáo dục AI bởi Hồ Sỹ Long'
+                  : 'Hỗ trợ tích hợp Năng lực số toàn cấp bởi Hồ Sỹ Long'
                 }
               </p>
             </div>

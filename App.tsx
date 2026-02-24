@@ -291,16 +291,9 @@ const App: React.FC = () => {
 
       <footer className={`mt-12 text-center ${isAIMode ? 'text-purple-800/60' : 'text-blue-800/60'} text-sm py-6`}>
         <p>© 2024 NLS & AI Education Assistant. Built with Gemini API & React.</p>
-        <p className={`mt-2 font-bold ${isAIMode ? 'text-purple-800' : 'text-blue-800'}`}>
-          ĐĂNG KÝ KHOÁ HỌC THỰC CHIẾN VIẾT SKKN, TẠO APP DẠY HỌC, TẠO MÔ PHỎNG TRỰC QUAN CHỈ VỚI 1 CÂU LỆNH: <a href="https://forms.gle/d7AmcT9MTyGy7bJd8" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600">https://forms.gle/d7AmcT9MTyGy7bJd8</a>
+        <p className={`mt-3 font-medium ${isAIMode ? 'text-purple-800' : 'text-blue-800'}`}>
+          Mọi thông tin vui lòng liên hệ Hồ Sỹ Long, zalo 0943278804
         </p>
-        <div className={`mt-3 space-y-1 ${isAIMode ? 'text-purple-800' : 'text-blue-800'} font-medium`}>
-          <p>Mọi thông tin vui lòng liên hệ:</p>
-          <p>
-            FB: <a href="https://www.facebook.com/tranhoaithanhvicko/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-600">https://www.facebook.com/tranhoaithanhvicko/</a>
-          </p>
-          <p>Zalo: 0348296773</p>
-        </div>
       </footer>
 
       <ApiKeyModal
