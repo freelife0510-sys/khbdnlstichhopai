@@ -62,11 +62,15 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
         if (marker === 'MỤC_TIÊU') {
           searchPatterns = [
             'Năng lực chung', 'năng lực chung', 'NĂNG LỰC CHUNG',
-            'Năng lực:', 'năng lực:', '3. Năng lực',
+            'Năng lực:', 'năng lực:', '3. Năng lực', '2. Năng lực',
+            'Năng lực đặc thù', 'năng lực đặc thù',
+            'b) Năng lực', 'b. Năng lực',
+            'Năng lực tính toán', 'Năng lực tự học', 'Năng lực hợp tác',
             '3. Thái độ', 'c) Thái độ', 'c. Thái độ',
             'Thái độ', 'thái độ', 'THÁI ĐỘ',
-            'Phẩm chất', 'phẩm chất', 'PHẨM CHẤT',
-            'I. MỤC TIÊU', 'I. Mục tiêu', '1. Kiến thức', 'a) Kiến thức'
+            'Phẩm chất', 'phẩm chất', 'PHẨM CHẤT', '3. Phẩm chất',
+            'I. MỤC TIÊU', 'I. Mục tiêu', '1. Kiến thức', 'a) Kiến thức',
+            'Năng lực tính toán', 'hình thành năng lực'
           ];
         }
         else if (marker.startsWith('HOẠT_ĐỘNG_')) {
@@ -529,7 +533,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       .replace(/===NLS_CỦNG_CỐ===/g, '\n**📌 CỦNG CỐ - TÍCH HỢP NLS:**\n')
 
       // ================== VIETNAMESE AI MARKERS ==================
-      .replace(/===AI_MỤC_TIÊU===/g, '\n**🤖 MỤC TIÊU GIÁO DỤC AI:**\n')
+      .replace(/===AI_MỤC_TIÊU===/g, '\n**🤖 NĂNG LỰC AI:**\n')
       .replace(/===AI_HOẠT_ĐỘNG_(\d+)_NỘI_DUNG===/g, '\n**🤖 HOẠT ĐỘNG $1 - NỘI DUNG AI:**\n')
       .replace(/===AI_HOẠT_ĐỘNG_(\d+)_SẢN_PHẨM===/g, '\n**🤖 HOẠT ĐỘNG $1 - SẢN PHẨM AI:**\n')
       .replace(/===AI_HOẠT_ĐỘNG_(\d+)_TỔ_CHỨC===/g, '\n**🤖 HOẠT ĐỘNG $1 - TỔ CHỨC AI:**\n')
@@ -558,7 +562,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       .replace(/===DC_HOMEWORK===/g, '\n**📌 HOMEWORK - DC:**\n')
 
       // ================== ENGLISH AI MARKERS ==================
-      .replace(/===AI_OBJECTIVES===/g, '\n**🤖 AI EDUCATION OBJECTIVES:**\n')
+      .replace(/===AI_OBJECTIVES===/g, '\n**🤖 AI COMPETENCE:**\n')
       .replace(/===AI_ACTIVITY_(\d+)_CONTENT===/g, '\n**🤖 ACTIVITY $1 - AI CONTENT:**\n')
       .replace(/===AI_ACTIVITY_(\d+)_OUTCOMES===/g, '\n**🤖 ACTIVITY $1 - AI OUTCOMES:**\n')
       .replace(/===AI_ACTIVITY_(\d+)_ORGANIZATION===/g, '\n**🤖 ACTIVITY $1 - AI ORGANIZATION:**\n')

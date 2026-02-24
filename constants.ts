@@ -399,14 +399,28 @@ NHIỆM VỤ CHÍNH:
 2. PHÂN TÍCH nội dung từng hoạt động để chọn vị trí PHÙ HỢP tích hợp giáo dục AI.
 3. PHÂN BỔ RẢI RÁC nội dung giáo dục AI vào NHIỀU VỊ TRÍ KHÁC NHAU trong giáo án.
 4. Đảm bảo nội dung AI phù hợp với CẤP LỚP và MÔN HỌC.
+5. TÍCH HỢP AI vào cả phần PHẨM CHẤT khi nội dung bài học cho phép (ví dụ: trách nhiệm khi sử dụng AI, trung thực không lạm dụng AI gian lận, chăm chỉ tìm tòi ứng dụng AI).
+
+⚠️ QUY TẮC CHÍNH TẢ BẮT BUỘC:
+- Viết đúng: "Đạo đức AI" (KHÔNG ĐƯỢC viết "Đạo đứa", "Đạo đức a", "Đạo dức" hay bất kỳ biến thể sai chính tả nào)
+- Viết đúng: "Năng lực AI" (KHÔNG ĐƯỢC viết sai)
+- Viết đúng: "Trí tuệ nhân tạo" (KHÔNG ĐƯỢC viết sai)
+- Kiểm tra chính tả TOÀN BỘ nội dung trước khi xuất ra.
 
 CẤU TRÚC ĐẦU RA - LINH HOẠT VỚI CẤU TRÚC GIÁO ÁN:
 
-1. Phần mục tiêu luôn dùng:
+1. Phần mục tiêu - BỔ SUNG "Năng lực AI" vào SAU phần Năng lực (mục 2):
 ===AI_MỤC_TIÊU===
 <blue>4. Năng lực AI:</blue>
-<blue>- Nội dung năng lực AI phù hợp theo QĐ 3439</blue>
+<blue>- Kỹ thuật và ứng dụng AI: [nội dung cụ thể phù hợp bài học]</blue>
+<blue>- Tư duy lấy con người làm trung tâm: [nội dung cụ thể]</blue>
+<blue>- Đạo đức AI: [nội dung cụ thể]</blue>
 ===END===
+
+LƯU Ý VỀ PHẨM CHẤT: Trong phần "3. Phẩm chất", NẾU nội dung bài học phù hợp, hãy thêm các phẩm chất liên quan đến AI:
+<blue>- Trách nhiệm: có ý thức sử dụng AI đúng mục đích, không lạm dụng AI.</blue>
+<blue>- Trung thực: không dùng AI để gian lận, nhận diện được tính xác thực của lời giải do AI cung cấp.</blue>
+<blue>- Chăm chỉ: tích cực tìm tòi, sáng tạo ứng dụng AI vào học tập.</blue>
 
 2. Trong các hoạt động, sử dụng CÚ PHÁP LINH HOẠT:
 ===AI_HOẠT_ĐỘNG_X_VỊ_TRÍ===
@@ -444,7 +458,7 @@ Trường hợp 2 - Giáo án có cấu trúc Bước 1-2-3-4:
 
 4 MIỀN NĂNG LỰC AI CẦN TÍCH HỢP (theo QĐ 3439):
 1. TƯ DUY LẤY CON NGƯỜI LÀM TRUNG TÂM: Xác định nhu cầu → đánh giá giải pháp AI
-2. ĐẠO ĐỨC AI: Quyền riêng tư, thiên vị thuật toán, trách nhiệm
+2. ĐẠO ĐỨC AI (viết đúng chính tả: "Đạo đức", KHÔNG phải "Đạo đứa"): Quyền riêng tư, thiên vị thuật toán, trách nhiệm
 3. KỸ THUẬT VÀ ỨNG DỤNG AI: Dữ liệu, thuật toán, công cụ AI
 4. THIẾT KẾ HỆ THỐNG AI: Xây dựng, cải tiến hệ thống AI đơn giản
 
@@ -454,6 +468,7 @@ NGUYÊN TẮC NGHIÊM NGẶT:
 3. Sử dụng marker phù hợp với cấu trúc giáo án thực tế.
 4. Nội dung tích hợp phải THỰC TẾ, KHẢ THI trong điều kiện dạy học tại Việt Nam.
 5. TỐI THIỂU phải có: AI_MỤC_TIÊU + 5 sections trong các hoạt động = 6 sections tổng cộng.
+6. KIỂM TRA CHÍNH TẢ: Đặc biệt chú ý "Đạo đức AI" (KHÔNG viết sai thành "Đạo đứa AI").
 
 NHẬN DIỆN LINH HOẠT CÁC PHẦN:
 - "b) Nội dung" / "Nội dung:" → dùng marker NỘI_DUNG
