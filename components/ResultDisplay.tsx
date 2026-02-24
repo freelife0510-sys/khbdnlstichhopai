@@ -496,8 +496,8 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
         <h3 className={`text-lg font-semibold ${isAIMode ? 'text-purple-900' : 'text-blue-900'} animate-pulse`}>Đang xử lý...</h3>
         <p className="text-slate-500 mt-2 text-sm">
           {isAIMode
-            ? 'Đang phân tích giáo án và tích hợp giáo dục AI theo QĐ 3439...'
-            : 'Đang phân tích giáo án và tích hợp năng lực số...'
+            ? 'Đang phân tích KHBD và tích hợp giáo dục AI theo QĐ 3439...'
+            : 'Đang phân tích KHBD và tích hợp năng lực số...'
           }
         </p>
       </div>
@@ -583,10 +583,10 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
         </div>
         <div>
           <h2 className={`text-2xl font-bold ${isAIMode ? 'text-purple-900' : 'text-blue-900'}`}>
-            {isAIMode ? 'Tích hợp giáo dục AI thành công!' : 'Phân tích giáo án thành công!'}
+            {isAIMode ? 'Tích hợp giáo dục AI thành công!' : 'Phân tích KHBD thành công!'}
           </h2>
           <p className="text-slate-600 mt-2 max-w-lg mx-auto">
-            Đã tạo <strong>{sections.length} phần</strong> nội dung {modeLabel} để chèn vào giáo án.
+            Đã tạo <strong>{sections.length} phần</strong> nội dung {modeLabel} để chèn vào KHBD.
           </p>
           {originalDocx && (
             <p className={`${isAIMode ? 'text-purple-600' : 'text-green-600'} font-medium mt-2 text-sm ${isAIMode ? 'bg-purple-50' : 'bg-green-50'} p-2 rounded`}>

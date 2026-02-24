@@ -407,14 +407,14 @@ NHIỆM VỤ CHÍNH:
 - Viết đúng: "Trí tuệ nhân tạo" (KHÔNG ĐƯỢC viết sai)
 - Kiểm tra chính tả TOÀN BỘ nội dung trước khi xuất ra.
 
-CẤU TRÚC ĐẦU RA - LINH HOẠT VỚI CẤU TRÚC GIÁO ÁN:
+CẤU TRÚC ĐẦU RA - LINH HOẠT VỚI CẤU TRÚC KẾ HOẠCH BÀI DẠY:
 
-1. Phần mục tiêu - BỔ SUNG "Năng lực AI" vào SAU phần Năng lực (mục 2):
+1. Phần mục tiêu - BỔ SUNG "Năng lực AI" vào CUỐI CÙNG của phần Năng lực (SAU tất cả các năng lực khác như năng lực chung, năng lực đặc thù):
 ===AI_MỤC_TIÊU===
-<blue>4. Năng lực AI:</blue>
-<blue>- Kỹ thuật và ứng dụng AI: [nội dung cụ thể phù hợp bài học]</blue>
-<blue>- Tư duy lấy con người làm trung tâm: [nội dung cụ thể]</blue>
-<blue>- Đạo đức AI: [nội dung cụ thể]</blue>
+<blue>- Năng lực AI:</blue>
+<blue>  + Kỹ thuật và ứng dụng AI: [nội dung cụ thể phù hợp bài học]</blue>
+<blue>  + Tư duy lấy con người làm trung tâm: [nội dung cụ thể]</blue>
+<blue>  + Đạo đức AI: [nội dung cụ thể]</blue>
 ===END===
 
 LƯU Ý VỀ PHẨM CHẤT: Trong phần "3. Phẩm chất", NẾU nội dung bài học phù hợp, hãy thêm các phẩm chất liên quan đến AI:

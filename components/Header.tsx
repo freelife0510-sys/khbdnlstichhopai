@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenSettings, appMode, onModeChange }
             </div>
             <div>
               <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-                {isAIMode ? 'SOẠN GIÁO ÁN GIÁO DỤC AI' : 'SOẠN GIÁO ÁN NĂNG LỰC SỐ'}
+                {isAIMode ? 'SOẠN KHBD GIÁO DỤC AI' : 'SOẠN KHBD NĂNG LỰC SỐ'}
               </h1>
               <p className={`${isAIMode ? 'text-purple-100' : 'text-blue-100'} text-sm`}>
                 {isAIMode

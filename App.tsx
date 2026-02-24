@@ -53,7 +53,7 @@ const App: React.FC = () => {
 
   const handleProcess = async () => {
     if (!lessonContent || lessonContent.trim().length === 0) {
-      setError("Vui lòng tải lên file giáo án (Giáo án trống hoặc chưa được tải).");
+      setError("Vui lòng tải lên file kế hoạch bài dạy (KHBD trống hoặc chưa được tải).");
       return;
     }
 
@@ -89,7 +89,7 @@ const App: React.FC = () => {
       }
 
       if (!generatedText || generatedText.trim().length === 0) {
-        throw new Error("AI trả về kết quả rỗng. Vui lòng thử lại với file giáo án rõ ràng hơn.");
+        throw new Error("AI trả về kết quả rỗng. Vui lòng thử lại với file KHBD rõ ràng hơn.");
       }
 
       setResult(generatedText);
@@ -221,7 +221,7 @@ const App: React.FC = () => {
               ) : (
                 <>
                   {isAIMode ? <Bot size={24} /> : <Sparkles size={24} />}
-                  <span>{isAIMode ? 'BẮT ĐẦU TÍCH HỢP GIÁO DỤC AI' : 'BẮT ĐẦU SOẠN GIÁO ÁN'}</span>
+                  <span>{isAIMode ? 'BẮT ĐẦU SOẠN KHBD GIÁO DỤC AI' : 'BẮT ĐẦU SOẠN KHBD'}</span>
                 </>
               )}
             </button>
@@ -238,12 +238,12 @@ const App: React.FC = () => {
                 </li>
                 <li className="flex items-start">
                   <span className={`${isAIMode ? 'bg-purple-600' : 'bg-blue-600'} rounded-full w-5 h-5 flex items-center justify-center text-xs mr-2 mt-0.5`}>2</span>
-                  <b>Bắt buộc:</b> Tải lên file giáo án (.docx hoặc .pdf).
+                  <b>Bắt buộc:</b> Tải lên file kế hoạch bài dạy (.docx hoặc .pdf).
                 </li>
                 <li className="flex items-start">
                   <span className={`${isAIMode ? 'bg-purple-500/50' : 'bg-blue-500/50'} rounded-full w-5 h-5 flex items-center justify-center text-xs mr-2 mt-0.5`}>3</span>
                   {isAIMode
-                    ? <span>AI sẽ tích hợp giáo dục AI theo QĐ 3439 vào giáo án.</span>
+                    ? <span>AI sẽ tích hợp giáo dục AI theo QĐ 3439 vào KHBD.</span>
                     : <span><i>Tùy chọn:</i> Tải file PPCT nếu muốn AI tham khảo năng lực cụ thể.</span>
                   }
                 </li>

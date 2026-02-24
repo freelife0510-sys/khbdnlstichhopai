@@ -185,11 +185,11 @@ const ContentInput: React.FC<ContentInputProps> = ({
         {/* Ô Upload Giáo án */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-slate-700 flex items-center">
-            <span className="text-red-500 mr-1">*</span> File Giáo án
+            <span className="text-red-500 mr-1">*</span> File Kế hoạch bài dạy
           </label>
           <UploadBox
-            title="Tải lên Giáo án"
-            subTitle={isAIMode ? "Giáo án cần tích hợp giáo dục AI" : "Giáo án bài dạy cần tích hợp"}
+            title="Tải lên Kế hoạch bài dạy"
+            subTitle={isAIMode ? "KHBD cần tích hợp giáo dục AI" : "KHBD cần tích hợp NLS"}
             inputRef={lessonInputRef}
             fileName={lessonFileName}
             isProcessing={processingLesson}
