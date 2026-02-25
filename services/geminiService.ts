@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { LessonInfo, ProcessingOptions, Subject } from "../types";
+import { LessonInfo, ProcessingOptions, Subject, IntegrationRow } from "../types";
 
 // Hàm xác định mức độ NLS phù hợp theo cấp lớp
 function getGradeLevelGuidance(grade: number): string {
@@ -216,7 +216,8 @@ import {
   SYSTEM_INSTRUCTION, NLS_FRAMEWORK_DATA,
   SYSTEM_INSTRUCTION_ENGLISH, NLS_FRAMEWORK_DATA_ENGLISH,
   AI_SYSTEM_INSTRUCTION, AI_EDUCATION_FRAMEWORK_DATA,
-  AI_SYSTEM_INSTRUCTION_ENGLISH, AI_EDUCATION_FRAMEWORK_DATA_ENGLISH
+  AI_SYSTEM_INSTRUCTION_ENGLISH, AI_EDUCATION_FRAMEWORK_DATA_ENGLISH,
+  AI_INTEGRATION_SYSTEM_INSTRUCTION
 } from "../constants";
 
 // Define the hierarchy of models for fallback
@@ -650,7 +651,7 @@ export const generateAILessonPlan = async (
   const ai = new GoogleGenAI({ apiKey: apiKey });
 
   // Determine if the subject is English
-  const isEnglishSubject = info.subject === Subject.ANH;
+  const isEnglishSubject = info.subject === Subject.TIENG_ANH;
 
   // Select appropriate framework and instructions
   const frameworkData = isEnglishSubject ? AI_EDUCATION_FRAMEWORK_DATA_ENGLISH : AI_EDUCATION_FRAMEWORK_DATA;
@@ -778,3 +779,114 @@ export const generateAILessonPlan = async (
   throw new Error("Tất cả các model đều thất bại. Vui lòng thử lại sau.");
 };
 
+// ===================== AI INTEGRATION TABLE (Tích hợp AI vào môn học) =====================
+
+export const generateAIIntegrationTable = async (
+  info: LessonInfo,
+  options: ProcessingOptions
+): Promise<IntegrationRow[]> => {
+
+  const apiKey = options.apiKey || process.env.API_KEY;
+  if (!apiKey) {
+    throw new Error("Missing API_KEY. Vui lòng nhập API Key trong phần cài đặt.");
+  }
+
+  const ai = new GoogleGenAI({ apiKey: apiKey });
+
+  const userPrompt = `
+    THÔNG TIN ĐẦU VÀO:
+    - Môn học: ${info.subject}
+    - Khối lớp: ${info.grade}
+
+    NỘI DUNG SÁCH GIÁO KHOA (trích xuất từ file):
+    ${info.content.substring(0, 80000)}
+
+    YÊU CẦU: Phân tích nội dung SGK trên và gợi ý các ĐỊA CHỈ TÍCH HỢP GIÁO DỤC AI phù hợp.
+    Trả về ĐÚNG định dạng JSON array như đã hướng dẫn trong system instruction.
+    Chỉ chọn 5-15 bài học có tiềm năng tích hợp cao nhất.
+  `;
+
+  let lastError = null;
+
+  for (let i = 0; i < MODELS.length; i++) {
+    const currentModelId = MODELS[i];
+    console.log(`[AI_INTEGRATION] Attempting generation with model: ${currentModelId}...`);
+
+    try {
+      const response = await ai.models.generateContent({
+        model: currentModelId,
+        config: {
+          systemInstruction: AI_INTEGRATION_SYSTEM_INSTRUCTION,
+          temperature: 0.2,
+        },
+        contents: userPrompt,
+      });
+
+      const text = response.text;
+      if (!text) {
+        throw new Error("API trả về kết quả rỗng.");
+      }
+
+      // Parse JSON from response - handle potential markdown wrapping
+      let jsonText = text.trim();
+      // Remove markdown code block if present
+      if (jsonText.startsWith('```')) {
+        jsonText = jsonText.replace(/^```(?:json)?\s*/, '').replace(/\s*```$/, '');
+      }
+
+      try {
+        const parsed = JSON.parse(jsonText) as IntegrationRow[];
+        if (!Array.isArray(parsed)) {
+          throw new Error("Response is not an array");
+        }
+        return parsed;
+      } catch (parseErr) {
+        console.error('[AI_INTEGRATION] JSON parse error, attempting to extract array...', parseErr);
+        // Try to extract JSON array from text
+        const match = jsonText.match(/\[\s*\{[\s\S]*\}\s*\]/);
+        if (match) {
+          return JSON.parse(match[0]) as IntegrationRow[];
+        }
+        throw new Error("Không thể phân tích phản hồi từ AI. Vui lòng thử lại.");
+      }
+
+    } catch (error: any) {
+      console.error(`[AI_INTEGRATION] Error with model ${currentModelId}:`, error);
+
+      let errorMessage = error.message || "";
+      if (typeof errorMessage === 'string' && errorMessage.trim().startsWith('{')) {
+        try {
+          const errorObj = JSON.parse(errorMessage);
+          if (errorObj.error && errorObj.error.message) {
+            errorMessage = errorObj.error.message;
+          }
+        } catch (e) { /* ignore parse error */ }
+      }
+
+      error.message = errorMessage;
+      lastError = error;
+
+      const isRetryable =
+        errorMessage.includes("503") ||
+        errorMessage.toLowerCase().includes("overloaded") ||
+        errorMessage.includes("UNAVAILABLE") ||
+        errorMessage.includes("429");
+
+      if (isRetryable && i < MODELS.length - 1) {
+        console.warn(`[AI_INTEGRATION] Model ${currentModelId} failed. Switching to fallback...`);
+        continue;
+      } else if (i < MODELS.length - 1) {
+        if (errorMessage.includes("403") || errorMessage.includes("API key not valid")) {
+          throw error;
+        }
+        continue;
+      }
+    }
+  }
+
+  if (lastError) {
+    throw lastError;
+  }
+
+  throw new Error("Tất cả các model đều thất bại. Vui lòng thử lại sau.");
+};

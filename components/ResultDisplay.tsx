@@ -116,6 +116,31 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
           searchPatterns = ['Bước 4:', 'Kết luận', 'Nhận định'];
         } else if (marker === 'CỦNG_CỐ') {
           searchPatterns = ['Củng cố', 'Vận dụng'];
+        } else if (marker === 'NỘI_DUNG_GDAI') {
+          searchPatterns = [
+            '3. Phẩm chất', 'Phẩm chất', 'phẩm chất', 'PHẨM CHẤT',
+            'c) Phẩm chất', 'c. Phẩm chất',
+            'I. MỤC TIÊU', 'I. Mục tiêu'
+          ];
+        } else if (marker === 'THIẾT_BỊ') {
+          searchPatterns = [
+            'II. THIẾT BỊ', 'II. Thiết bị', 'Thiết bị dạy học', 'THIẾT BỊ DẠY HỌC',
+            'II. CHUẨN BỊ', 'Chuẩn bị', 'Học liệu', 'HỌC LIỆU',
+            'Thiết bị và học liệu', 'Đồ dùng dạy học'
+          ];
+        } else if (marker === 'VẬN_DỤNG') {
+          searchPatterns = [
+            'Hoạt động 4', 'Hoạt động 5', 'Hoạt động vận dụng',
+            'Vận dụng', 'VẬN DỤNG', 'Củng cố', 'CỦNG CỐ',
+            'Hoạt động luyện tập', 'Tìm tòi mở rộng',
+            'D. HOẠT ĐỘNG', 'IV. RÚT KINH NGHIỆM'
+          ];
+        } else if (marker === 'ĐÁNH_GIÁ') {
+          searchPatterns = [
+            'Rút kinh nghiệm', 'RÚT KINH NGHIỆM', 'IV. Rút kinh nghiệm',
+            'Kế hoạch đánh giá', 'Đánh giá', 'ĐÁNH GIÁ',
+            'Hoạt động 4', 'Hoạt động 5', 'Hoạt động vận dụng'
+          ];
         }
       }
       // ================== ENGLISH DC/AI MARKERS ==================
@@ -542,6 +567,10 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       .replace(/===AI_HOẠT_ĐỘNG_(\d+)_KẾT_LUẬN===/g, '\n**🤖 HOẠT ĐỘNG $1 - KẾT LUẬN AI:**\n')
       .replace(/===AI_HOẠT_ĐỘNG_(\d+)===/g, '\n**🤖 HOẠT ĐỘNG $1 - GIÁO DỤC AI:**\n')
       .replace(/===AI_CỦNG_CỐ===/g, '\n**🤖 CỦNG CỐ - GIÁO DỤC AI:**\n')
+      .replace(/===AI_NỘI_DUNG_GDAI===/g, '\n**🤖 NỘI DUNG GIÁO DỤC AI:**\n')
+      .replace(/===AI_THIẾT_BỊ===/g, '\n**🤖 CÔNG CỤ SỐ VÀ AI:**\n')
+      .replace(/===AI_VẬN_DỤNG===/g, '\n**🤖 HOẠT ĐỘNG VẬN DỤNG GIÁO DỤC AI:**\n')
+      .replace(/===AI_ĐÁNH_GIÁ===/g, '\n**🤖 KẾ HOẠCH ĐÁNH GIÁ NĂNG LỰC AI:**\n')
 
       // ================== ENGLISH DC MARKERS ==================
       .replace(/===DC_OBJECTIVES===/g, '\n**📌 DIGITAL COMPETENCE OBJECTIVES:**\n')

@@ -1,7 +1,8 @@
 
 export enum AppMode {
   NLS = "NLS",       // Năng lực số (hiện tại)
-  AI_EDU = "AI_EDU"  // Giáo dục AI (QĐ 3439)
+  AI_EDU = "AI_EDU",  // Giáo dục AI (QĐ 3439)
+  AI_INTEGRATION = "AI_INTEGRATION" // Tích hợp AI vào môn học/HĐGD
 }
 
 // Danh sách môn học theo Chương trình GDPT 2018
@@ -137,4 +138,13 @@ export interface ProcessingOptions {
 
 export interface GeminiResponse {
   text: string;
+}
+
+export interface IntegrationRow {
+  chuDe: string;
+  tenBaiHoc: string;
+  mucTieuBaiHoc: string;
+  mucTieuTichHop: string;
+  yeuCauCanDat: string;
+  ghiChu: string;
 }
