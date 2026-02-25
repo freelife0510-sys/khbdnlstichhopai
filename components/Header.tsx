@@ -19,13 +19,13 @@ const Header: React.FC<HeaderProps> = ({ onOpenSettings, appMode, onModeChange }
   const badgeBg = isIntegrationMode ? 'text-teal-100 bg-teal-700' : isAIMode ? 'text-purple-100 bg-purple-700' : 'text-blue-100 bg-blue-700';
 
   const headerTitle = isIntegrationMode
-    ? 'TÍCH HỢP AI VÀO MÔN HỌC'
+    ? 'GỢI Ý ĐỊA CHỈ TÍCH HỢP AI'
     : isAIMode
       ? 'SOẠN KHBD GIÁO DỤC AI'
       : 'SOẠN KHBD NĂNG LỰC SỐ';
 
   const headerSubtitle = isIntegrationMode
-    ? 'Gợi ý địa chỉ tích hợp giáo dục AI theo QĐ 3439 bởi Hồ Sỹ Long'
+    ? 'Gợi ý địa chỉ tích hợp GDAI theo QĐ 3439 & CV 8334 bởi Hồ Sỹ Long'
     : isAIMode
       ? 'Hỗ trợ tích hợp giáo dục AI bởi Hồ Sỹ Long'
       : 'Hỗ trợ tích hợp Năng lực số toàn cấp bởi Hồ Sỹ Long';
@@ -102,8 +102,8 @@ const Header: React.FC<HeaderProps> = ({ onOpenSettings, appMode, onModeChange }
               }`}
           >
             <TableProperties size={16} />
-            <span className="hidden sm:inline">Tích hợp AI môn học</span>
-            <span className="sm:hidden">Tích hợp</span>
+            <span className="hidden sm:inline">Gợi ý địa chỉ tích hợp AI</span>
+            <span className="sm:hidden">Gợi ý tích hợp</span>
           </button>
         </div>
       </div>
