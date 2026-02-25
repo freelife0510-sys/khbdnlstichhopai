@@ -293,22 +293,12 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       const trimmed = line.trim();
       if (!trimmed) continue;
 
-      if (trimmed.startsWith('[Chèn') || trimmed.startsWith('(Chèn') ||
-        trimmed.startsWith('[chèn') || trimmed.startsWith('(chèn') ||
-        trimmed.startsWith('(tiếp tục') || trimmed.startsWith('[tiếp tục') ||
-        trimmed.startsWith('...') || trimmed.startsWith('===')) {
+      // Chỉ skip marker lines (===XXX=== hoặc ===END===)
+      if (trimmed.match(/^===[A-Z_]+=*===$/) || trimmed === '===END===') {
         continue;
       }
 
       let processedLine = trimmed;
-
-      // Loại bỏ prefixes
-      processedLine = processedLine.replace(/^\*?\s*Tích hợp NLS:\s*/i, '- ');
-      processedLine = processedLine.replace(/^\*?\s*Tích hợp AI:\s*/i, '- ');
-
-      // Loại bỏ mã năng lực số
-      processedLine = processedLine.replace(/\s*\(\d+\.\d+\.?[A-Za-z]+\d*[a-z]?\)/g, '');
-      processedLine = processedLine.replace(/\s*\(\d+\.\d+[A-Za-z]+\d*[a-z]?\)/g, '');
 
       // Loại bỏ thẻ <u>
       processedLine = processedLine.replace(/<\/?u>/g, '');
@@ -319,12 +309,20 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       processedLine = processedLine.replace(/<\/?red>/g, '');
       processedLine = processedLine.replace(/<\/?blue>/g, '');
 
+      // Detect bold
+      let isBold = processedLine.startsWith('**') && processedLine.endsWith('**');
+      if (isBold) processedLine = processedLine.slice(2, -2);
+
       const content = escapeXml(processedLine);
 
-      if (isBlueContent) {
-        xml += `<w:p><w:r><w:rPr><w:color w:val="0000FF"/></w:rPr><w:t>${content}</w:t></w:r></w:p>`;
-      } else if (isRedContent) {
-        xml += `<w:p><w:r><w:rPr><w:color w:val="FF0000"/></w:rPr><w:t>${content}</w:t></w:r></w:p>`;
+      // Build run properties
+      let rPr = '';
+      if (isBlueContent) rPr += '<w:color w:val="0000FF"/>';
+      else if (isRedContent) rPr += '<w:color w:val="FF0000"/>';
+      if (isBold) rPr += '<w:b/>';
+
+      if (rPr) {
+        xml += `<w:p><w:r><w:rPr>${rPr}</w:rPr><w:t>${content}</w:t></w:r></w:p>`;
       } else {
         xml += `<w:p><w:r><w:t>${content}</w:t></w:r></w:p>`;
       }
@@ -383,16 +381,41 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       }
     }
 
+    // Map marker names to readable Vietnamese labels
+    const getMarkerLabel = (marker: string): string => {
+      const labels: Record<string, string> = {
+        'AI_MỤC_TIÊU': 'Năng lực AI đặc thù',
+        'AI_NỘI_DUNG_GDAI': 'Nội dung giáo dục AI',
+        'AI_THIẾT_BỊ': 'Công cụ số và AI',
+        'AI_VẬN_DỤNG': 'Hoạt động vận dụng giáo dục AI',
+        'AI_ĐÁNH_GIÁ': 'Kế hoạch đánh giá năng lực AI',
+        'AI_CỦNG_CỐ': 'Củng cố - Giáo dục AI',
+        'NLS_MỤC_TIÊU': 'Mục tiêu năng lực số',
+        'NLS_CỦNG_CỐ': 'Củng cố - Tích hợp NLS',
+      };
+      if (labels[marker]) return labels[marker];
+      // Handle dynamic markers like AI_HOẠT_ĐỘNG_1_NỘI_DUNG
+      const actMatch = marker.match(/^(AI|NLS)_HOẠT_ĐỘNG_(\d+)_?(.*)$/);
+      if (actMatch) {
+        const prefix = actMatch[1] === 'AI' ? 'Giáo dục AI' : 'NLS';
+        const actNum = actMatch[2];
+        const sub = actMatch[3]?.replace(/_/g, ' ') || '';
+        return `Hoạt động ${actNum} - ${prefix}${sub ? ': ' + sub : ''}`;
+      }
+      return marker.replace(/_/g, ' ');
+    };
+
     if (notInsertedSections.length > 0) {
       const labelText = isAIMode ? '═══ NỘI DUNG GIÁO DỤC AI BỔ SUNG ═══' : '═══ NỘI DUNG NLS BỔ SUNG ═══';
       let fallbackXml = `
         <w:p><w:pPr><w:pBdr><w:top w:val="single" w:sz="12" w:space="1" w:color="${colorHex}"/></w:pBdr></w:pPr></w:p>
-        <w:p><w:r><w:rPr><w:color w:val="${colorHex}"/></w:rPr><w:t>${labelText}</w:t></w:r></w:p>
+        <w:p><w:r><w:rPr><w:color w:val="${colorHex}"/><w:b/></w:rPr><w:t>${labelText}</w:t></w:r></w:p>
       `;
 
       for (const section of sections) {
         if (notInsertedSections.includes(section.marker)) {
-          fallbackXml += `<w:p><w:r><w:rPr><w:color w:val="${colorHex}"/></w:rPr><w:t>[${section.marker}]</w:t></w:r></w:p>`;
+          const label = getMarkerLabel(section.marker);
+          fallbackXml += `<w:p><w:r><w:rPr><w:color w:val="${colorHex}"/><w:b/></w:rPr><w:t>${escapeXml(label)}</w:t></w:r></w:p>`;
           fallbackXml += convertMarkdownToWordXml(section.content);
         }
       }
@@ -410,7 +433,18 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
     });
   };
 
-  // Fallback: Tạo file DOCX mới
+  // Chuẩn bị nội dung cho DOCX - giữ nguyên tất cả, chỉ loại bỏ markers
+  const getFullContentForDocx = (content: string): string => {
+    return content
+      // Remove marker lines but keep content between them
+      .replace(/===(NLS|DC|AI)_[^=]+=*===/g, '')
+      .replace(/===END===/g, '')
+      // Clean up excessive blank lines
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  };
+
+  // Fallback: Tạo file DOCX mới - đầy đủ nội dung
   const createNewDocx = async (content: string): Promise<Blob> => {
     const lines = content.split('\n');
     const children: (Paragraph | Table)[] = [];
@@ -421,6 +455,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       const line = lines[i].trimEnd();
       const trimmed = line.trim();
 
+      // Table handling
       if (trimmed.startsWith('|')) {
         inTable = true;
         tableBuffer.push(line);
@@ -437,26 +472,57 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
         inTable = false;
       }
 
-      if (!trimmed || (trimmed.startsWith('===') && trimmed.endsWith('==='))) continue;
+      // Skip empty lines and horizontal rules
+      if (!trimmed || trimmed === '---' || trimmed === '***') continue;
 
-      if (trimmed.startsWith('## ')) {
+      // Headings - support all levels
+      if (trimmed.startsWith('# ') && !trimmed.startsWith('## ')) {
         children.push(new Paragraph({
-          children: parseTextWithFormatting(trimmed.replace('## ', '')),
+          children: parseTextWithFormatting(trimmed.replace(/^# /, '')),
+          heading: HeadingLevel.TITLE,
+          spacing: { before: 240, after: 120 }
+        }));
+      } else if (trimmed.startsWith('## ')) {
+        children.push(new Paragraph({
+          children: parseTextWithFormatting(trimmed.replace(/^## /, '')),
           heading: HeadingLevel.HEADING_1,
           spacing: { before: 200, after: 100 }
         }));
       } else if (trimmed.startsWith('### ')) {
         children.push(new Paragraph({
-          children: parseTextWithFormatting(trimmed.replace('### ', '')),
+          children: parseTextWithFormatting(trimmed.replace(/^### /, '')),
           heading: HeadingLevel.HEADING_2,
           spacing: { before: 150, after: 50 }
         }));
-      } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+      } else if (trimmed.startsWith('#### ')) {
+        children.push(new Paragraph({
+          children: parseTextWithFormatting(trimmed.replace(/^#### /, '')),
+          heading: HeadingLevel.HEADING_3,
+          spacing: { before: 120, after: 40 }
+        }));
+      }
+      // Bullet points - support nested levels (  + or    - )
+      else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         children.push(new Paragraph({
           children: parseTextWithFormatting(trimmed.substring(2)),
           bullet: { level: 0 }
         }));
-      } else {
+      } else if (trimmed.startsWith('+ ') || (line.startsWith('  ') && (trimmed.startsWith('- ') || trimmed.startsWith('* ')))) {
+        children.push(new Paragraph({
+          children: parseTextWithFormatting(trimmed.replace(/^[+\-*] /, '')),
+          bullet: { level: 1 }
+        }));
+      }
+      // Numbered lists
+      else if (trimmed.match(/^\d+\.\s/)) {
+        children.push(new Paragraph({
+          children: parseTextWithFormatting(trimmed),
+          spacing: { after: 60 },
+          alignment: AlignmentType.JUSTIFIED
+        }));
+      }
+      // Regular paragraphs
+      else {
         children.push(new Paragraph({
           children: parseTextWithFormatting(trimmed),
           spacing: { after: 100 },
@@ -465,6 +531,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       }
     }
 
+    // Flush remaining table buffer
     if (tableBuffer.length > 0) {
       const tableNode = createTableFromMarkdown(tableBuffer);
       if (tableNode) children.push(tableNode);
@@ -493,7 +560,8 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
         fileName = originalDocx.fileName.replace('.docx', `${suffix}.docx`);
       } else {
         console.log('Tạo file DOCX mới...');
-        blob = await createNewDocx(result);
+        const docxContent = getFullContentForDocx(result);
+        blob = await createNewDocx(docxContent);
         fileName = isAIMode ? 'Giao_an_AI_Edu.docx' : 'Giao_an_NLS.docx';
       }
 
