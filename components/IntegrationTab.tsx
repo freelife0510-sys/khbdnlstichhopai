@@ -3,10 +3,9 @@ import { Subject, AppMode, IntegrationRow, getSubjectsByGrade } from '../types';
 import { generateAIIntegrationTable } from '../services/geminiService';
 import IntegrationResult from './IntegrationResult';
 import { Upload, BookOpen, Sparkles, AlertCircle } from 'lucide-react';
-import * as pdfjsLib from 'pdfjs-dist';
 
-// @ts-ignore
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+// Use global pdfjsLib loaded from CDN in index.html
+declare const pdfjsLib: any;
 
 interface IntegrationTabProps {
     apiKey: string;
@@ -179,8 +178,8 @@ const IntegrationTab: React.FC<IntegrationTabProps> = ({ apiKey }) => {
                 onClick={handleProcess}
                 disabled={loading || !textbookContent}
                 className={`w-full py-4 rounded-xl shadow-lg flex items-center justify-center space-x-2 text-white font-bold text-lg transition-all transform hover:-translate-y-1 ${loading || !textbookContent
-                        ? 'bg-slate-400 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-teal-600 to-teal-800 hover:shadow-teal-500/30'
+                    ? 'bg-slate-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-teal-600 to-teal-800 hover:shadow-teal-500/30'
                     }`}
             >
                 {loading ? (
