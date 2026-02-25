@@ -16,21 +16,40 @@ const IntegrationTab: React.FC<IntegrationTabProps> = ({ apiKey }) => {
     const [grade, setGrade] = useState<number>(10);
     const [textbookContent, setTextbookContent] = useState<string>('');
     const [fileName, setFileName] = useState<string>('');
+    const [fileLoading, setFileLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<IntegrationRow[]>([]);
     const [error, setError] = useState<string | null>(null);
 
     const availableSubjects = getSubjectsByGrade(grade);
 
+    // Ensure pdfjsLib worker is configured
+    const ensurePdfWorker = () => {
+        if (typeof pdfjsLib !== 'undefined' && pdfjsLib.GlobalWorkerOptions) {
+            if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            }
+        }
+    };
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setFileName(file.name);
+        setFileLoading(true);
         setError(null);
+        setTextbookContent('');
+        setFileName(file.name);
 
         try {
+            let extractedText = '';
+
             if (file.name.endsWith('.pdf')) {
+                if (typeof pdfjsLib === 'undefined') {
+                    throw new Error('Thư viện đọc PDF chưa được tải. Vui lòng tải lại trang và thử lại.');
+                }
+                ensurePdfWorker();
+
                 const arrayBuffer = await file.arrayBuffer();
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 let fullText = '';
@@ -42,25 +61,36 @@ const IntegrationTab: React.FC<IntegrationTabProps> = ({ apiKey }) => {
                         .join(' ');
                     fullText += pageText + '\n\n';
                 }
-                setTextbookContent(fullText);
+                extractedText = fullText;
             } else if (file.name.endsWith('.docx')) {
                 const arrayBuffer = await file.arrayBuffer();
                 const JSZip = (await import('jszip')).default;
                 const zip = await JSZip.loadAsync(arrayBuffer);
                 const docXml = await zip.file('word/document.xml')?.async('text');
                 if (docXml) {
-                    const textContent = docXml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                    setTextbookContent(textContent);
+                    extractedText = docXml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
                 }
             } else if (file.name.endsWith('.txt')) {
-                const text = await file.text();
-                setTextbookContent(text);
+                extractedText = await file.text();
             } else {
+                setFileName('');
+                setFileLoading(false);
                 setError('Định dạng file không được hỗ trợ. Vui lòng tải file .pdf, .docx hoặc .txt');
+                return;
+            }
+
+            if (!extractedText || extractedText.trim().length === 0) {
+                setFileName('');
+                setError('Không thể trích xuất văn bản từ file này. File có thể chứa ảnh scan hoặc không có nội dung text. Vui lòng thử file khác.');
+            } else {
+                setTextbookContent(extractedText);
             }
         } catch (err: any) {
             console.error('File read error:', err);
-            setError('Lỗi khi đọc file. Vui lòng thử lại.');
+            setFileName('');
+            setError(err.message || 'Lỗi khi đọc file. Vui lòng thử lại.');
+        } finally {
+            setFileLoading(false);
         }
     };
 
@@ -145,7 +175,14 @@ const IntegrationTab: React.FC<IntegrationTabProps> = ({ apiKey }) => {
 
                 <label className="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-teal-300 rounded-xl cursor-pointer bg-teal-50/50 hover:bg-teal-50 transition-colors">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        {fileName ? (
+                        {fileLoading ? (
+                            <>
+                                <svg className="w-8 h-8 mb-2 text-teal-600 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                <p className="text-sm text-teal-700 font-medium">Đang đọc file...</p>
+                            </>
+                        ) : textbookContent ? (
                             <>
                                 <svg className="w-8 h-8 mb-2 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
