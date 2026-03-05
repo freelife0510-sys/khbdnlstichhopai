@@ -34,12 +34,14 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClose, init
                         </div>
                         <h3 className="text-xl font-bold text-white">Cấu hình API Key</h3>
                     </div>
-                    <button
-                        onClick={onClose}
-                        className="text-white/80 hover:text-white transition-colors"
-                    >
-                        <X size={24} />
-                    </button>
+                    {initialKey && (
+                        <button
+                            onClick={onClose}
+                            className="text-white/80 hover:text-white transition-colors"
+                        >
+                            <X size={24} />
+                        </button>
+                    )}
                 </div>
 
                 <div className="p-6">

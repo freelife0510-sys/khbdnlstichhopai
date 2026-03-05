@@ -234,10 +234,9 @@ export const generateNLSLessonPlan = async (
 ): Promise<string> => {
 
   // Initialize inside function to avoid top-level execution issues
-  // Prioritize API Key from options (user input), then environment variable
-  const apiKey = options.apiKey || process.env.API_KEY;
+  const apiKey = options.apiKey;
   if (!apiKey) {
-    throw new Error("Missing API_KEY. Vui lòng nhập API Key trong phần cài đặt.");
+    throw new Error("Missing API_KEY. Vui lòng nhập API Key của bạn trong phần Cấu hình API Key.");
   }
 
   const ai = new GoogleGenAI({ apiKey: apiKey });
@@ -651,9 +650,9 @@ export const generateAILessonPlan = async (
   options: ProcessingOptions
 ): Promise<string> => {
 
-  const apiKey = options.apiKey || process.env.API_KEY;
+  const apiKey = options.apiKey;
   if (!apiKey) {
-    throw new Error("Missing API_KEY. Vui lòng nhập API Key trong phần cài đặt.");
+    throw new Error("Missing API_KEY. Vui lòng nhập API Key của bạn trong phần Cấu hình API Key.");
   }
 
   const ai = new GoogleGenAI({ apiKey: apiKey });
