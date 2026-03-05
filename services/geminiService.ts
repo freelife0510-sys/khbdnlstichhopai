@@ -408,7 +408,7 @@ export const generateNLSLessonPlan = async (
         // Even for non-standard retryable errors, if it's a model-specific issue (like 404 Not Found for model), we should try next.
         // But for API Key issues (403), we should stop.
         if (errorMessage.includes("403") || errorMessage.includes("API key not valid") || errorMessage.toLowerCase().includes("quota")) {
-          throw new Error("API Key không hợp lệ hoặc đã hết hạn mức sử dụng (Quota Exceeded). Vui lòng cấu hình API Key khác.");
+          throw new Error("API Key KHÔNG HỢP LỆ hoặc HẾT HẠN MỨC (Quota Exceeded).\n\nCách xử lý:\n1. Dùng tài khoản Google khác để tạo API Key mới tại Google AI Studio.\n2. Kiểm tra lại dự án Google Cloud của bạn xem có bị giới hạn không.");
         }
         // For other errors, we might casually try the next model just in case, 
         // but let's stick to the rule: "If model fails -> switch".
@@ -422,7 +422,7 @@ export const generateNLSLessonPlan = async (
   if (lastError) {
     const errorMsg = typeof lastError.message === 'string' ? lastError.message.toLowerCase() : "";
     if (errorMsg.includes("quota") || errorMsg.includes("429")) {
-      throw new Error("API Key đã hết hạn mức sử dụng (Quota Exceeded) hoặc bị giới hạn lượt gọi. Vui lòng cấu hình API Key khác.");
+      throw new Error("API Key ĐÃ HẾT HẠN MỨC SỬ DỤNG (Quota Exceeded) hoặc quá tải lượt gọi.\n\nCách giải quyết:\n1. Sang tab 'Cài đặt' để nhập API Key của một tài khoản Google (Gmail) KHÁC.\n2. Lấy API Key mới miễn phí tại: https://aistudio.google.com/app/apikey");
     }
     if (errorMsg.includes("403") || errorMsg.includes("api key not valid")) {
       throw new Error("API Key không hợp lệ. Vui lòng cấu hình API Key khác.");
@@ -772,7 +772,7 @@ export const generateAILessonPlan = async (
         continue;
       } else if (i < MODELS.length - 1) {
         if (errorMessage.includes("403") || errorMessage.includes("API key not valid") || errorMessage.toLowerCase().includes("quota")) {
-          throw new Error("API Key không hợp lệ hoặc đã hết hạn mức sử dụng (Quota Exceeded). Vui lòng cấu hình API Key khác.");
+          throw new Error("API Key KHÔNG HỢP LỆ hoặc HẾT HẠN MỨC (Quota Exceeded).\n\nCách xử lý:\n1. Dùng tài khoản Google khác để tạo API Key mới tại Google AI Studio.\n2. Kiểm tra lại dự án Google Cloud của bạn xem có bị giới hạn không.");
         }
         console.warn(`[AI_EDU] Model ${currentModelId} encountered error. Switching to fallback model...`);
         continue;
@@ -783,7 +783,7 @@ export const generateAILessonPlan = async (
   if (lastError) {
     const errorMsg = typeof lastError.message === 'string' ? lastError.message.toLowerCase() : "";
     if (errorMsg.includes("quota") || errorMsg.includes("429")) {
-      throw new Error("API Key đã hết hạn mức sử dụng (Quota Exceeded) hoặc bị giới hạn lượt gọi. Vui lòng cấu hình API Key khác.");
+      throw new Error("API Key ĐÃ HẾT HẠN MỨC SỬ DỤNG (Quota Exceeded) hoặc quá tải lượt gọi.\n\nCách giải quyết:\n1. Sang tab 'Cài đặt' để nhập API Key của một tài khoản Google (Gmail) KHÁC.\n2. Lấy API Key mới miễn phí tại: https://aistudio.google.com/app/apikey");
     }
     if (errorMsg.includes("403") || errorMsg.includes("api key not valid")) {
       throw new Error("API Key không hợp lệ. Vui lòng cấu hình API Key khác.");
@@ -892,7 +892,7 @@ export const generateAIIntegrationTable = async (
         continue;
       } else if (i < MODELS.length - 1) {
         if (errorMessage.includes("403") || errorMessage.includes("API key not valid") || errorMessage.toLowerCase().includes("quota")) {
-          throw new Error("API Key không hợp lệ hoặc đã hết hạn mức sử dụng (Quota Exceeded). Vui lòng cấu hình API Key khác.");
+          throw new Error("API Key KHÔNG HỢP LỆ hoặc HẾT HẠN MỨC (Quota Exceeded).\n\nCách xử lý:\n1. Dùng tài khoản Google khác để tạo API Key mới tại Google AI Studio.\n2. Kiểm tra lại dự án Google Cloud của bạn xem có bị giới hạn không.");
         }
         continue;
       }
@@ -902,7 +902,7 @@ export const generateAIIntegrationTable = async (
   if (lastError) {
     const errorMsg = typeof lastError.message === 'string' ? lastError.message.toLowerCase() : "";
     if (errorMsg.includes("quota") || errorMsg.includes("429")) {
-      throw new Error("API Key đã hết hạn mức sử dụng (Quota Exceeded) hoặc bị giới hạn lượt gọi. Vui lòng cấu hình API Key khác.");
+      throw new Error("API Key ĐÃ HẾT HẠN MỨC SỬ DỤNG (Quota Exceeded) hoặc quá tải lượt gọi.\n\nCách giải quyết:\n1. Sang tab 'Cài đặt' để nhập API Key của một tài khoản Google (Gmail) KHÁC.\n2. Lấy API Key mới miễn phí tại: https://aistudio.google.com/app/apikey");
     }
     if (errorMsg.includes("403") || errorMsg.includes("api key not valid")) {
       throw new Error("API Key không hợp lệ. Vui lòng cấu hình API Key khác.");
