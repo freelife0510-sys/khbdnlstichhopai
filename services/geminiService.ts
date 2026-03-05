@@ -222,9 +222,10 @@ import {
 
 // Define the hierarchy of models for fallback
 const MODELS = [
-  "gemini-3-flash-preview",  // Priority 1: Default - Fast & Good quality
-  "gemini-3-pro-preview",    // Priority 2: Deep thinking / Best quality
-  "gemini-2.5-flash"         // Priority 3: Fallback stable
+  "gemini-2.5-flash",        // Priority 1: Default - Fast & Good quality
+  "gemini-2.0-flash",        // Priority 2: Fallback 1
+  "gemini-1.5-flash",        // Priority 3: Fallback 2
+  "gemini-1.5-pro"           // Priority 4: Fallback 3
 ];
 
 export const generateNLSLessonPlan = async (
@@ -406,8 +407,8 @@ export const generateNLSLessonPlan = async (
       } else if (i < MODELS.length - 1) {
         // Even for non-standard retryable errors, if it's a model-specific issue (like 404 Not Found for model), we should try next.
         // But for API Key issues (403), we should stop.
-        if (errorMessage.includes("403") || errorMessage.includes("API key not valid")) {
-          throw error; // Stop immediately, key is wrong
+        if (errorMessage.includes("403") || errorMessage.includes("API key not valid") || errorMessage.toLowerCase().includes("quota")) {
+          throw new Error("API Key không hợp lệ hoặc đã hết hạn mức sử dụng (Quota Exceeded). Vui lòng cấu hình API Key khác.");
         }
         // For other errors, we might casually try the next model just in case, 
         // but let's stick to the rule: "If model fails -> switch".
@@ -419,6 +420,13 @@ export const generateNLSLessonPlan = async (
 
   // If all models failed
   if (lastError) {
+    const errorMsg = typeof lastError.message === 'string' ? lastError.message.toLowerCase() : "";
+    if (errorMsg.includes("quota") || errorMsg.includes("429")) {
+      throw new Error("API Key đã hết hạn mức sử dụng (Quota Exceeded) hoặc bị giới hạn lượt gọi. Vui lòng cấu hình API Key khác.");
+    }
+    if (errorMsg.includes("403") || errorMsg.includes("api key not valid")) {
+      throw new Error("API Key không hợp lệ. Vui lòng cấu hình API Key khác.");
+    }
     throw lastError; // Throw the last error encountered (likely contains the specific code like 429)
   }
 
@@ -763,8 +771,8 @@ export const generateAILessonPlan = async (
         console.warn(`[AI_EDU] Model ${currentModelId} failed/overloaded. Switching to fallback model...`);
         continue;
       } else if (i < MODELS.length - 1) {
-        if (errorMessage.includes("403") || errorMessage.includes("API key not valid")) {
-          throw error;
+        if (errorMessage.includes("403") || errorMessage.includes("API key not valid") || errorMessage.toLowerCase().includes("quota")) {
+          throw new Error("API Key không hợp lệ hoặc đã hết hạn mức sử dụng (Quota Exceeded). Vui lòng cấu hình API Key khác.");
         }
         console.warn(`[AI_EDU] Model ${currentModelId} encountered error. Switching to fallback model...`);
         continue;
@@ -773,6 +781,13 @@ export const generateAILessonPlan = async (
   }
 
   if (lastError) {
+    const errorMsg = typeof lastError.message === 'string' ? lastError.message.toLowerCase() : "";
+    if (errorMsg.includes("quota") || errorMsg.includes("429")) {
+      throw new Error("API Key đã hết hạn mức sử dụng (Quota Exceeded) hoặc bị giới hạn lượt gọi. Vui lòng cấu hình API Key khác.");
+    }
+    if (errorMsg.includes("403") || errorMsg.includes("api key not valid")) {
+      throw new Error("API Key không hợp lệ. Vui lòng cấu hình API Key khác.");
+    }
     throw lastError;
   }
 
@@ -876,8 +891,8 @@ export const generateAIIntegrationTable = async (
         console.warn(`[AI_INTEGRATION] Model ${currentModelId} failed. Switching to fallback...`);
         continue;
       } else if (i < MODELS.length - 1) {
-        if (errorMessage.includes("403") || errorMessage.includes("API key not valid")) {
-          throw error;
+        if (errorMessage.includes("403") || errorMessage.includes("API key not valid") || errorMessage.toLowerCase().includes("quota")) {
+          throw new Error("API Key không hợp lệ hoặc đã hết hạn mức sử dụng (Quota Exceeded). Vui lòng cấu hình API Key khác.");
         }
         continue;
       }
@@ -885,6 +900,13 @@ export const generateAIIntegrationTable = async (
   }
 
   if (lastError) {
+    const errorMsg = typeof lastError.message === 'string' ? lastError.message.toLowerCase() : "";
+    if (errorMsg.includes("quota") || errorMsg.includes("429")) {
+      throw new Error("API Key đã hết hạn mức sử dụng (Quota Exceeded) hoặc bị giới hạn lượt gọi. Vui lòng cấu hình API Key khác.");
+    }
+    if (errorMsg.includes("403") || errorMsg.includes("api key not valid")) {
+      throw new Error("API Key không hợp lệ. Vui lòng cấu hình API Key khác.");
+    }
     throw lastError;
   }
 
