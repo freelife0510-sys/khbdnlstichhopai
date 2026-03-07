@@ -227,6 +227,195 @@ const MODELS = [
   "gemini-1.5-flash",        // Priority 3: Fallback 2
   "gemini-1.5-pro"           // Priority 4: Fallback 3
 ];
+type RuleValidationResult = {
+  valid: boolean;
+  errors: string[];
+};
+
+const stripDiacritics = (input: string): string =>
+  input
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D");
+
+const normalizeForCheck = (input: string): string =>
+  stripDiacritics(input).toLowerCase();
+
+const extractMarkers = (text: string): string[] => {
+  const matches = text.match(/===([^=\n]+)===/g) || [];
+  return matches
+    .map((m) => m.replace(/===/g, "").trim())
+    .filter((m) => m.toUpperCase() !== "END");
+};
+
+const normalizeMarker = (marker: string): string =>
+  stripDiacritics(marker)
+    .toUpperCase()
+    .replace(/[^A-Z0-9_]/g, "_")
+    .replace(/_+/g, "_");
+
+const hasAnyMarkerToken = (markers: string[], tokenList: string[]): boolean => {
+  const normalizedMarkers = markers.map(normalizeMarker);
+  return tokenList.some((token) =>
+    normalizedMarkers.some((marker) => marker.includes(token))
+  );
+};
+
+const countMarkersByPrefix = (markers: string[], prefixes: string[]): number =>
+  markers.filter((marker) => {
+    const n = normalizeMarker(marker);
+    return prefixes.some((prefix) => n.startsWith(prefix));
+  }).length;
+
+const hasAnyKeyword = (text: string, keywords: string[]): boolean => {
+  const normalized = normalizeForCheck(text);
+  return keywords.some((kw) => normalized.includes(normalizeForCheck(kw)));
+};
+
+const hasPpctLikeCode = (text: string): boolean =>
+  /(?:^|\s)[1-6]\.\d\s*(?:\.|\s*)?(?:CB1|CB2|TC1|TC2|NC1)\s*[a-z]?(?=$|\s|[;,.])/i.test(text) ||
+  /(?:^|\s)[1-6]\.\d(?:CB1|CB2|TC1|TC2|NC1)[a-z]?(?=$|\s|[;,.])/i.test(text);
+
+const isTechSubject = (subject: Subject): boolean =>
+  subject === Subject.TIN_HOC ||
+  subject === Subject.TIN_CN_TH ||
+  subject === Subject.CONG_NGHE;
+
+const validateNLSOutput = (
+  output: string,
+  info: LessonInfo,
+  options: ProcessingOptions
+): RuleValidationResult => {
+  if (options.analyzeOnly) {
+    return { valid: true, errors: [] };
+  }
+
+  const errors: string[] = [];
+  const markers = extractMarkers(output);
+  const nlsSectionCount = countMarkersByPrefix(markers, ["NLS_", "DC_"]);
+
+  if (nlsSectionCount < 7) {
+    errors.push("Missing minimum integration sections (need at least 7 total sections).");
+  }
+
+  const hasObjectiveMarker = hasAnyMarkerToken(markers, ["NLS_MUC_TIEU", "DC_OBJECTIVES"]);
+  if (!hasObjectiveMarker) {
+    errors.push("Missing required objective marker (NLS_MUC_TIEU or DC_OBJECTIVES).");
+  }
+
+  if (info.distributionContent && info.distributionContent.trim().length > 0) {
+    const n = normalizeForCheck(output);
+    const hasPpctClause = n.includes("khong co (theo ppct)");
+    const hasCode = hasPpctLikeCode(output);
+    if (!hasPpctClause && !hasCode) {
+      errors.push("PPCT is provided but output does not clearly reflect extracted PPCT competencies.");
+    }
+  }
+
+  if (info.grade <= 5) {
+    const tooAdvanced = ["python", "machine learning", "deep learning", "huan luyen mo hinh", "thuat toan phuc tap", "lap trinh ai"];
+    if (hasAnyKeyword(output, tooAdvanced)) {
+      errors.push("Content is too advanced for grades 1-5.");
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+};
+
+const validateAIOutput = (
+  output: string,
+  info: LessonInfo,
+  options: ProcessingOptions,
+  isEnglishSubject: boolean
+): RuleValidationResult => {
+  if (options.analyzeOnly) {
+    return { valid: true, errors: [] };
+  }
+
+  const errors: string[] = [];
+  const markers = extractMarkers(output);
+  const aiSectionCount = countMarkersByPrefix(markers, ["AI_"]);
+
+  if (isEnglishSubject) {
+    if (aiSectionCount < 6) {
+      errors.push("Missing minimum AI sections for English output (need at least 6).");
+    }
+    if (!hasAnyMarkerToken(markers, ["AI_OBJECTIVES"])) {
+      errors.push("Missing AI_OBJECTIVES marker.");
+    }
+  } else {
+    if (aiSectionCount < 10) {
+      errors.push("Missing minimum AI sections for Vietnamese output (need required core markers + activity markers).");
+    }
+    if (!hasAnyMarkerToken(markers, ["AI_MUC_TIEU"])) errors.push("Missing AI_MUC_TIEU marker.");
+    if (!hasAnyMarkerToken(markers, ["AI_NOI_DUNG_GDAI"])) errors.push("Missing AI_NOI_DUNG_GDAI marker.");
+    if (!hasAnyMarkerToken(markers, ["AI_THIET_BI"])) errors.push("Missing AI_THIET_BI marker.");
+    if (!hasAnyMarkerToken(markers, ["AI_VAN_DUNG"])) errors.push("Missing AI_VAN_DUNG marker.");
+    if (!hasAnyMarkerToken(markers, ["AI_DANH_GIA"])) errors.push("Missing AI_DANH_GIA marker.");
+  }
+
+  const normalizedOutput = normalizeForCheck(output);
+  const hasAIEthics = normalizedOutput.includes("dao duc ai") || normalizedOutput.includes("ai ethics");
+  if (!hasAIEthics) {
+    errors.push("Missing AI ethics content.");
+  }
+
+  if (info.grade <= 5) {
+    const tooAdvanced = ["python", "machine learning", "deep learning", "huan luyen mo hinh", "xay dung he thong ai"];
+    if (hasAnyKeyword(output, tooAdvanced)) {
+      errors.push("AI content is too advanced for grades 1-5.");
+    }
+  }
+
+  if (!isTechSubject(info.subject) && info.grade <= 9) {
+    const heavyTechnical = ["xay dung mo hinh ai", "huan luyen model", "toi uu tham so", "lap trinh mo hinh", "neural network"];
+    if (hasAnyKeyword(output, heavyTechnical)) {
+      errors.push("AI technical depth is not suitable for this subject/grade combination.");
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+};
+
+const autoRepairOutput = async (
+  ai: GoogleGenAI,
+  modelId: string,
+  systemInstruction: string,
+  originalPrompt: string,
+  draftOutput: string,
+  errors: string[]
+): Promise<string | null> => {
+  const numberedErrors = errors.map((e, idx) => `${idx + 1}. ${e}`).join("\n");
+  const repairPrompt = [
+    "You are a strict lesson-plan quality gate.",
+    "Task: repair the draft so it fully satisfies all validation rules while preserving the source structure.",
+    "Required fixes:",
+    numberedErrors,
+    "Hard constraints:",
+    "- Return full revised lesson plan only.",
+    "- Keep marker syntax required by the mode.",
+    "- No JSON output.",
+    "Original prompt context:",
+    originalPrompt,
+    "Draft to repair:",
+    draftOutput,
+  ].join("\n\n");
+
+  try {
+    const repaired = await ai.models.generateContent({
+      model: modelId,
+      config: {
+        systemInstruction,
+        temperature: 0.1,
+      },
+      contents: repairPrompt,
+    });
+    return repaired.text || null;
+  } catch {
+    return null;
+  }
+};
 
 export const generateNLSLessonPlan = async (
   info: LessonInfo,
@@ -369,9 +558,32 @@ export const generateNLSLessonPlan = async (
 
       const text = response.text;
       if (!text) {
-        throw new Error("API trả về kết quả rỗng (Empty Response).");
+        throw new Error("API returned empty response.");
       }
-      return text; // Success!
+
+      const validation = validateNLSOutput(text, info, options);
+      if (validation.valid) {
+        return text;
+      }
+
+      const repairedText = await autoRepairOutput(
+        ai,
+        currentModelId,
+        systemInstruction,
+        userPrompt,
+        text,
+        validation.errors
+      );
+
+      if (repairedText) {
+        const repairedValidation = validateNLSOutput(repairedText, info, options);
+        if (repairedValidation.valid) {
+          return repairedText;
+        }
+        throw new Error(`Rule Engine failed after auto-repair: ${repairedValidation.errors.join(" | ")}`);
+      }
+
+      throw new Error(`Rule Engine failed: ${validation.errors.join(" | ")}`);
 
     } catch (error: any) {
       console.error(`Error with model ${currentModelId}:`, error);
@@ -740,9 +952,32 @@ export const generateAILessonPlan = async (
 
       const text = response.text;
       if (!text) {
-        throw new Error("API trả về kết quả rỗng (Empty Response).");
+        throw new Error("API returned empty response.");
       }
-      return text;
+
+      const validation = validateAIOutput(text, info, options, isEnglishSubject);
+      if (validation.valid) {
+        return text;
+      }
+
+      const repairedText = await autoRepairOutput(
+        ai,
+        currentModelId,
+        systemInstruction,
+        userPrompt,
+        text,
+        validation.errors
+      );
+
+      if (repairedText) {
+        const repairedValidation = validateAIOutput(repairedText, info, options, isEnglishSubject);
+        if (repairedValidation.valid) {
+          return repairedText;
+        }
+        throw new Error(`[AI_EDU] Rule Engine failed after auto-repair: ${repairedValidation.errors.join(" | ")}`);
+      }
+
+      throw new Error(`[AI_EDU] Rule Engine failed: ${validation.errors.join(" | ")}`);
 
     } catch (error: any) {
       console.error(`[AI_EDU] Error with model ${currentModelId}:`, error);
