@@ -143,8 +143,38 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
           ];
         }
       }
+        // New strict AI markers for preserving KHBD structure
+        if (prefix === 'AI' && marker === 'KIEN_THUC') {
+          searchPatterns = [
+            '1. Kiến thức', '1) Kiến thức', 'Kiến thức:',
+            'a) Kiến thức', 'Mục 1. Kiến thức'
+          ];
+        } else if (prefix === 'AI' && marker === 'NANG_LUC') {
+          searchPatterns = [
+            '2. Năng lực', '2) Năng lực', 'Năng lực:',
+            'Năng lực chung', 'Năng lực đặc thù'
+          ];
+        } else if (prefix === 'AI' && marker === 'PHAM_CHAT') {
+          searchPatterns = [
+            '3. Phẩm chất', '3) Phẩm chất', 'Phẩm chất:',
+            'Chăm chỉ', 'Trách nhiệm', 'Trung thực', 'Nhân ái', 'Yêu nước'
+          ];
+        } else if (prefix === 'AI' && marker === 'THIET_BI') {
+          searchPatterns = [
+            'II. THIẾT BỊ', 'II. Thiết bị', 'Thiết bị dạy học', 'THIẾT BỊ DẠY HỌC',
+            'II. CHUẨN BỊ', 'Chuẩn bị', 'Học liệu', 'HỌC LIỆU',
+            'Thiết bị và học liệu', 'Đồ dùng dạy học'
+          ];
+        } else if (prefix === 'AI' && marker === 'VAN_DUNG') {
+          searchPatterns = [
+            'Hoạt động 4', 'Hoạt động 5', 'Hoạt động vận dụng',
+            'Vận dụng', 'VẬN DỤNG', 'Củng cố', 'CỦNG CỐ',
+            'Hoạt động luyện tập', 'Tìm tòi mở rộng',
+            'D. HOẠT ĐỘNG', 'IV. RÚT KINH NGHIỆM'
+          ];
+        }
       // ================== ENGLISH DC/AI MARKERS ==================
-      else if (prefix === 'DC') {
+      if (prefix === 'DC') {
         if (marker === 'OBJECTIVES') {
           searchPatterns = [
             'Competences', 'competences', 'COMPETENCES',
@@ -389,6 +419,11 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
         'AI_THIẾT_BỊ': 'Công cụ số và AI',
         'AI_VẬN_DỤNG': 'Hoạt động vận dụng giáo dục AI',
         'AI_ĐÁNH_GIÁ': 'Kế hoạch đánh giá năng lực AI',
+        'AI_KIEN_THUC': 'Bổ sung kiến thức AI (cuối mục 1)',
+        'AI_NANG_LUC': 'Năng lực AI (cuối mục 2)',
+        'AI_PHAM_CHAT': 'Bổ sung phẩm chất AI (mục 3)',
+        'AI_THIET_BI': 'Bổ sung thiết bị dạy học AI (mục II)',
+        'AI_VAN_DUNG': 'Hoạt động vận dụng giáo dục AI',
         'AI_CỦNG_CỐ': 'Củng cố - Giáo dục AI',
         'NLS_MỤC_TIÊU': 'Mục tiêu năng lực số',
         'NLS_CỦNG_CỐ': 'Củng cố - Tích hợp NLS',
@@ -639,6 +674,11 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ result, loading, original
       .replace(/===AI_THIẾT_BỊ===/g, '\n**🤖 CÔNG CỤ SỐ VÀ AI:**\n')
       .replace(/===AI_VẬN_DỤNG===/g, '\n**🤖 HOẠT ĐỘNG VẬN DỤNG GIÁO DỤC AI:**\n')
       .replace(/===AI_ĐÁNH_GIÁ===/g, '\n**🤖 KẾ HOẠCH ĐÁNH GIÁ NĂNG LỰC AI:**\n')
+      .replace(/===AI_KIEN_THUC===/g, '\n**🤖 BỔ SUNG KIẾN THỨC AI (CUỐI MỤC 1):**\n')
+      .replace(/===AI_NANG_LUC===/g, '\n**🤖 NĂNG LỰC AI (CUỐI MỤC 2):**\n')
+      .replace(/===AI_PHAM_CHAT===/g, '\n**🤖 BỔ SUNG PHẨM CHẤT AI (MỤC 3):**\n')
+      .replace(/===AI_THIET_BI===/g, '\n**🤖 BỔ SUNG THIẾT BỊ DẠY HỌC AI (MỤC II):**\n')
+      .replace(/===AI_VAN_DUNG===/g, '\n**🤖 HOẠT ĐỘNG VẬN DỤNG GIÁO DỤC AI:**\n')
 
       // ================== ENGLISH DC MARKERS ==================
       .replace(/===DC_OBJECTIVES===/g, '\n**📌 DIGITAL COMPETENCE OBJECTIVES:**\n')

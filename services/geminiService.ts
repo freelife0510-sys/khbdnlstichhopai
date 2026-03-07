@@ -236,8 +236,8 @@ const stripDiacritics = (input: string): string =>
   input
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/đ/g, "d")
-    .replace(/Đ/g, "D");
+    .replace(/\u0111/g, "d")
+    .replace(/\u0110/g, "D");
 
 const normalizeForCheck = (input: string): string =>
   stripDiacritics(input).toLowerCase();
@@ -345,14 +345,14 @@ const validateAIOutput = (
       errors.push("Missing AI_OBJECTIVES marker.");
     }
   } else {
-    if (aiSectionCount < 10) {
-      errors.push("Missing minimum AI sections for Vietnamese output (need required core markers + activity markers).");
+    if (aiSectionCount < 5) {
+      errors.push("Missing minimum AI sections for Vietnamese output.");
     }
-    if (!hasAnyMarkerToken(markers, ["AI_MUC_TIEU"])) errors.push("Missing AI_MUC_TIEU marker.");
-    if (!hasAnyMarkerToken(markers, ["AI_NOI_DUNG_GDAI"])) errors.push("Missing AI_NOI_DUNG_GDAI marker.");
+    if (!hasAnyMarkerToken(markers, ["AI_KIEN_THUC"])) errors.push("Missing AI_KIEN_THUC marker.");
+    if (!hasAnyMarkerToken(markers, ["AI_NANG_LUC"])) errors.push("Missing AI_NANG_LUC marker.");
+    if (!hasAnyMarkerToken(markers, ["AI_PHAM_CHAT"])) errors.push("Missing AI_PHAM_CHAT marker.");
     if (!hasAnyMarkerToken(markers, ["AI_THIET_BI"])) errors.push("Missing AI_THIET_BI marker.");
     if (!hasAnyMarkerToken(markers, ["AI_VAN_DUNG"])) errors.push("Missing AI_VAN_DUNG marker.");
-    if (!hasAnyMarkerToken(markers, ["AI_DANH_GIA"])) errors.push("Missing AI_DANH_GIA marker.");
   }
 
   const normalizedOutput = normalizeForCheck(output);
@@ -502,6 +502,8 @@ export const generateNLSLessonPlan = async (
     NOTE ON ACTIVITY INTEGRATION (WHEN PPCT IS PROVIDED):
     - Teaching activities (in the Procedure section) should only be designed around digital competencies extracted from PPCT. Do not design activities for competencies outside PPCT.
     
+    
+
     OUTPUT FORMAT:
     - Return the entire edited lesson plan content in Markdown format.
     
@@ -881,6 +883,18 @@ export const generateAILessonPlan = async (
 
   // Hướng dẫn đặc thù môn học
   const subjectGuidance = getAISubjectGuidance(info.subject);
+  const aiDeploymentRules = `
+NON-NEGOTIABLE OUTPUT RULES FOR THIS DEPLOYMENT:
+1) Keep original lesson plan structure and wording as much as possible.
+2) In section I:
+   - Add only one AI line at the end of Knowledge via marker ===AI_KIEN_THUC===...===END===.
+   - Add one AI line at the end of Competence via marker ===AI_NANG_LUC===...===END===.
+   - Add AI quality additions in existing qualities via marker ===AI_PHAM_CHAT===...===END===.
+3) In section II, add short and practical teacher/student preparation via marker ===AI_THIET_BI===...===END===.
+4) Keep core teaching activities unchanged as baseline; add practical AI extension at the end via marker ===AI_VAN_DUNG===...===END===.
+5) Use concise, feasible classroom actions; avoid long theory.
+6) Return full revised lesson plan text with markers above included.
+`;
 
   const userPrompt = isEnglishSubject ? `
     AI EDUCATION FRAMEWORK REFERENCE DATA (Decision 3439/QĐ-BGDĐT):
@@ -896,11 +910,16 @@ export const generateAILessonPlan = async (
     ${options.analyzeOnly ? "- Analyze only, do not edit in detail." : "- Edit the lesson plan and INTEGRATE AI EDUCATION into teaching activities."}
     ${options.detailedReport ? "- Include a detailed explanation table of AI competency domains addressed at the end." : ""}
     
+    
     FORMAT REQUIREMENTS (MANDATORY):
     1. PRESERVE ORIGINAL FORMATTING.
     2. TABLES: Use standard Markdown Table.
     3. AI ADDITIONS: Use <blue>...</blue> tags to mark AI education content in blue.
     
+    
+
+    ${aiDeploymentRules}
+
     OUTPUT FORMAT:
     - Return the entire edited lesson plan content in Markdown format.
     
@@ -920,12 +939,15 @@ export const generateAILessonPlan = async (
     ${options.analyzeOnly ? "- Chỉ phân tích, không chỉnh sửa chi tiết." : "- Chỉnh sửa giáo án và TÍCH HỢP GIÁO DỤC AI vào các hoạt động dạy học."}
     ${options.detailedReport ? "- Kèm theo bảng giải thích chi tiết các miền năng lực AI đã tích hợp ở cuối bài." : ""}
     
+    
     YÊU CẦU VỀ ĐỊNH DẠNG (BẮT BUỘC):
     1. GIỮ NGUYÊN ĐỊNH DẠNG GỐC.
     2. TOÁN HỌC: Tất cả công thức toán phải viết dạng LaTeX trong dấu $. 
     3. BẢNG: Sử dụng Markdown Table chuẩn.
     4. AI BỔ SUNG: Dùng thẻ <blue>...</blue> để đánh dấu nội dung AI bổ sung bằng màu xanh.
     
+    ${aiDeploymentRules}
+
     ĐỊNH DẠNG ĐẦU RA:
     - Trả về toàn bộ nội dung giáo án đã chỉnh sửa dưới dạng Markdown.
     
